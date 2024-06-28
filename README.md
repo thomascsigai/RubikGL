@@ -2,6 +2,8 @@
 
 RubikGL is an interactive 3D Rubik's Cube simulator built with OpenGL and CMake, offering customizable cube sizes, face rotations, scrambling, and camera controls.
 
+Follow the project's progress on [Notion](https://malleable-painter-716.notion.site/RubikGL-a7539a97290f488c991f5ec4f79caf14).
+
 ## Features
 - **Customizable Cube Size:** Generate a Rubik's Cube of any size.
 - **Face Rotation:** Interactively rotate the cube's faces.
