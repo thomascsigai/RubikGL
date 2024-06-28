@@ -31,5 +31,4 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)
 endif()
 
-# Lier GLFW à l'exécutable en utilisant la cible glfw3
 target_link_libraries(RubikGL PRIVATE glfw3 ${OPENGL_LIBRARIES})
