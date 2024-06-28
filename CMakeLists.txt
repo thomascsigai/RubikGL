@@ -12,7 +12,7 @@ endif()
 project ("RubikGL")
 
 # Add source to this project's executable.
-add_executable (RubikGL "RubikGL.cpp" )
+add_executable (RubikGL "src/RubikGL.cpp" )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)
