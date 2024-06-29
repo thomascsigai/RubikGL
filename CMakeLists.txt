@@ -12,14 +12,21 @@ endif()
 project ("RubikGL")
 
 # Ajouter le répertoire contenant les fichiers en-tête
-include_directories(${CMAKE_SOURCE_DIR}/include/)
+include_directories(${CMAKE_SOURCE_DIR}/include/GLFW ${CMAKE_SOURCE_DIR}/include/GLEW)
 
 
-# Ajouter la bibliothèque GLFW
+# Add GLFW Lib
 add_library(glfw3 STATIC IMPORTED)
 set_target_properties(glfw3 PROPERTIES
     IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glfw3.lib"
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/GLFW"
+)
+
+# Add GLEW Lib
+add_library(glew32 STATIC IMPORTED)
+set_target_properties(glew32 PROPERTIES
+    IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glew32.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/GLEW"
 )
 
 find_package(OpenGL REQUIRED)
@@ -31,4 +38,4 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)
 endif()
 
-target_link_libraries(RubikGL PRIVATE glfw3 ${OPENGL_LIBRARIES})
+target_link_libraries(RubikGL PRIVATE glfw3 glew32 ${OPENGL_LIBRARIES})
