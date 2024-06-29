@@ -12,8 +12,18 @@ endif()
 project ("RubikGL")
 
 # Ajouter le répertoire contenant les fichiers en-tête
-include_directories(${CMAKE_SOURCE_DIR}/include/GLFW ${CMAKE_SOURCE_DIR}/include/GLEW ${CMAKE_SOURCE_DIR}/include/glm)
+include_directories(${CMAKE_SOURCE_DIR}/include/GLFW ${CMAKE_SOURCE_DIR}/include/GL ${CMAKE_SOURCE_DIR}/include/glm ${CMAKE_SOURCE_DIR}/include/imgui ${CMAKE_SOURCE_DIR}/include/imgui/backends)
 
+# Ajouter les fichiers source d'ImGui
+set(IMGUI_SRC
+    ${CMAKE_SOURCE_DIR}/lib/imgui/imgui.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/imgui_demo.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/imgui_draw.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/imgui_tables.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/imgui_widgets.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_glfw.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
+)
 
 # Add GLFW Lib
 add_library(glfw3 STATIC IMPORTED)
@@ -26,13 +36,13 @@ set_target_properties(glfw3 PROPERTIES
 add_library(glew32 STATIC IMPORTED)
 set_target_properties(glew32 PROPERTIES
     IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glew32.lib"
-    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/GLEW"
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/GL"
 )
 
 find_package(OpenGL REQUIRED)
 
 # Add source to this project's executable.
-add_executable (RubikGL "src/Main.cpp")
+add_executable (RubikGL "src/Main.cpp" ${IMGUI_SRC})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)
