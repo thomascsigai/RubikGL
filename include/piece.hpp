@@ -12,13 +12,14 @@
 class Piece
 {
 public:
-	Piece(glm::vec3 pos, glm::vec3 color);
+	Piece(glm::vec3 pos, glm::vec3 color, float scale);
 
 	void draw();
 
 private:
 	glm::vec3 pos;
 	glm::vec3 color;
+	float scale;
 };
 
 #endif

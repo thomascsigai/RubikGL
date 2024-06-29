@@ -1,7 +1,5 @@
 ﻿#include <window.hpp>
-#include <piece.hpp>
-
-#include <glm.hpp>
+#include <cube.hpp>
 
 int main(void)
 {
@@ -10,16 +8,16 @@ int main(void)
     if (!window.init())
         return -1;
 
-    Piece pieceTest = Piece(glm::vec3(1), glm::vec3(1));
+    Cube cube = Cube();
 
     // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!window.should_close())
     {
         window.clear();
 
-        pieceTest.draw();
+        cube.draw();
 
         window.update();
     }

@@ -32,7 +32,7 @@ const unsigned int cubeIndices[] = {
         2, 3, 7
 };
 
-Piece::Piece(glm::vec3 pos, glm::vec3 color) : pos(pos), color(color) {}
+Piece::Piece(glm::vec3 pos, glm::vec3 color, float scale) : pos(pos), color(color), scale(scale) {}
 
 void Piece::draw()
 {
@@ -61,13 +61,16 @@ void Piece::draw()
     cubeShader.use();
 
     glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
+    view = glm::rotate(view, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
 
     glm::mat4 projection = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(60.0f), 1600.0f / 900.0f, 0.1f, 100.0f);
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+    model = glm::scale(model, glm::vec3(scale));
+    model = glm::translate(model, pos);
+    //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
 
     int viewLoc = glGetUniformLocation(cubeShader.ID, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
