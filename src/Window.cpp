@@ -49,6 +49,9 @@ bool Window::init_GLFW()
 
     glfwMakeContextCurrent(window);
 
+    glViewport(0, 0, W_WIDTH, W_HEIGHT);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
     return true;
 }
 
@@ -59,11 +62,17 @@ bool Window::should_close()
 
 void Window::clear()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::update()
 {
     glfwSwapBuffers(window);
     glfwPollEvents();
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
