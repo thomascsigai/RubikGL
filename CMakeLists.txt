@@ -12,7 +12,7 @@ endif()
 project ("RubikGL")
 
 # Ajouter le répertoire contenant les fichiers en-tête
-include_directories(${CMAKE_SOURCE_DIR}/include/GLFW ${CMAKE_SOURCE_DIR}/include/GLEW)
+include_directories(${CMAKE_SOURCE_DIR}/include/GLFW ${CMAKE_SOURCE_DIR}/include/GLEW ${CMAKE_SOURCE_DIR}/include/glm)
 
 
 # Add GLFW Lib

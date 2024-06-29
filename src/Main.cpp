@@ -1,5 +1,6 @@
 ﻿#include <glew.h>
 #include <glfw3.h>
+#include <glm.hpp>
 
 #include <iostream>
 
@@ -27,6 +28,10 @@ int main(void)
         std::cerr << "Failed to initialize GLEW: " << glewGetErrorString(err) << std::endl;
         return -1;
     }
+
+    // Test GLM
+    glm::vec3 v(1.0f, 0.0f, 0.0f);
+    std::cout << "GLM vector: (" << v.x << ", " << v.y << ", " << v.z << ")" << std::endl;
 
     // render loop --------------------------------------
     while (!glfwWindowShouldClose(window))
