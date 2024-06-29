@@ -33,10 +33,15 @@ bool Window::init_GLEW()
 
 bool Window::init_GLFW()
 {
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return false;
     }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
     
@@ -51,6 +56,8 @@ bool Window::init_GLFW()
 
     glViewport(0, 0, W_WIDTH, W_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    glEnable(GL_DEPTH_TEST);
 
     return true;
 }
