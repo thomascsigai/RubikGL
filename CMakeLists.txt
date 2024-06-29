@@ -13,7 +13,7 @@ project ("RubikGL")
 
 # Ajouter le répertoire contenant les fichiers en-tête
 include_directories(${CMAKE_SOURCE_DIR}/include/GLFW ${CMAKE_SOURCE_DIR}/include/GL ${CMAKE_SOURCE_DIR}/include/glm ${CMAKE_SOURCE_DIR}/include/imgui ${CMAKE_SOURCE_DIR}/include/imgui/backends
-${CMAKE_SOURCE_DIR}/include/)
+${CMAKE_SOURCE_DIR}/include/ ${CMAKE_SOURCE_DIR}/include/shader)
 
 # Ajouter les fichiers source d'ImGui
 set(IMGUI_SRC
@@ -43,7 +43,7 @@ set_target_properties(glew32 PROPERTIES
 find_package(OpenGL REQUIRED)
 
 # Add source to this project's executable.
-add_executable (RubikGL "src/Main.cpp" ${IMGUI_SRC} "src/Window.cpp")
+add_executable (RubikGL "src/Main.cpp" ${IMGUI_SRC} "src/Window.cpp" "src/Cube.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)
