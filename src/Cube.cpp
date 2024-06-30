@@ -1,6 +1,6 @@
 #include <cube.hpp>
 
-Cube::Cube(unsigned int size) : size(size) 
+Cube::Cube(unsigned int size) : size(size), shader(VSHADER_PATH, FSHADER_PATH)
 {
 	float offset = (size - 1) / 2.0f;
 
@@ -26,11 +26,9 @@ Cube::Cube(unsigned int size) : size(size)
 
 void Cube::draw()
 {
-	Shader cubeShader(VSHADER_PATH, FSHADER_PATH);
-
 	for (Piece piece : pieces)
 	{
-		cubeShader.use();
-		piece.draw(cubeShader);
+		shader.use();
+		piece.draw(shader);
 	}
 }

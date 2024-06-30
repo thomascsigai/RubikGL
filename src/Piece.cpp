@@ -67,7 +67,6 @@ void Piece::draw(Shader& shader)
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(scale));
     model = glm::translate(model, pos);
-    //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
 
     int viewLoc = glGetUniformLocation(shader.ID, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));

@@ -21,6 +21,7 @@ private:
 
 	unsigned int size;
 	std::vector<Piece> pieces;
+	Shader shader;
 };
 
 #endif
