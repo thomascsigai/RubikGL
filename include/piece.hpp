@@ -14,12 +14,13 @@ class Piece
 public:
 	Piece(glm::vec3 pos, glm::vec3 color, float scale);
 
-	void draw();
+	void draw(Shader& shader);
 
 private:
 	glm::vec3 pos;
 	glm::vec3 color;
 	float scale;
+	unsigned int VAO;
 };
 
 #endif

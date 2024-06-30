@@ -32,11 +32,9 @@ const unsigned int cubeIndices[] = {
         2, 3, 7
 };
 
-Piece::Piece(glm::vec3 pos, glm::vec3 color, float scale) : pos(pos), color(color), scale(scale) {}
-
-void Piece::draw()
+Piece::Piece(glm::vec3 pos, glm::vec3 color, float scale) : pos(pos), color(color), scale(scale) 
 {
-    unsigned int VBO, VAO, EBO;
+    unsigned int VBO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -55,11 +53,10 @@ void Piece::draw()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
+}
 
-    Shader cubeShader("resources/shaders/basicCube.vert", "resources/shaders/basicCube.frag");
-
-    cubeShader.use();
-
+void Piece::draw(Shader& shader)
+{
     glm::mat4 view = glm::mat4(1.0f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
     view = glm::rotate(view, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
@@ -72,13 +69,13 @@ void Piece::draw()
     model = glm::translate(model, pos);
     //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
 
-    int viewLoc = glGetUniformLocation(cubeShader.ID, "view");
+    int viewLoc = glGetUniformLocation(shader.ID, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-    int projLoc = glGetUniformLocation(cubeShader.ID, "projection");
+    int projLoc = glGetUniformLocation(shader.ID, "projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    int modelLoc = glGetUniformLocation(cubeShader.ID, "model");
+    int modelLoc = glGetUniformLocation(shader.ID, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
     glBindVertexArray(VAO);

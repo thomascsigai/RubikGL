@@ -5,6 +5,9 @@
 #include <vector>
 
 #define DEFAULT_SIZE 3
+#define VSHADER_PATH "resources/shaders/basicCube.vert"
+#define FSHADER_PATH "resources/shaders/basicCube.frag"
+
 
 class Cube
 {
