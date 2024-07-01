@@ -1,15 +1,15 @@
 #include <piece.hpp>
 
 const float cubeVertices[] = {
-        -0.5f,  0.5f,  0.5f, // front vertices
-         0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, // front vertices
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, // pos, color
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f, // back vertices
-         0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f
+        -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // back vertices
+         0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f
 };
 
 const unsigned int cubeIndices[] = {
@@ -34,7 +34,6 @@ const unsigned int cubeIndices[] = {
 
 Piece::Piece(glm::vec3 pos, glm::vec3 color, float scale) : pos(pos), color(color), scale(scale) 
 {
-    unsigned int VBO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -49,6 +48,9 @@ Piece::Piece(glm::vec3 pos, glm::vec3 color, float scale) : pos(pos), color(colo
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3* sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -79,4 +81,11 @@ void Piece::draw(Shader& shader)
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+}
+
+void Piece::cleanup()
+{
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
 }

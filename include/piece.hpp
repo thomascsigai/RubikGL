@@ -15,12 +15,13 @@ public:
 	Piece(glm::vec3 pos, glm::vec3 color, float scale);
 
 	void draw(Shader& shader);
+	void cleanup();
 
 private:
 	glm::vec3 pos;
 	glm::vec3 color;
 	float scale;
-	unsigned int VAO;
+	unsigned int VAO, VBO, EBO;
 };
 
 #endif

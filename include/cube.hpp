@@ -8,19 +8,20 @@
 #define VSHADER_PATH "resources/shaders/basicCube.vert"
 #define FSHADER_PATH "resources/shaders/basicCube.frag"
 
-
 class Cube
 {
 public:
 
 	Cube(unsigned int size = DEFAULT_SIZE);
+	~Cube();
+
+	unsigned int size;
 
 	void draw();
 
 private:
 
-	unsigned int size;
-	std::vector<Piece> pieces;
+	std::vector<Piece*> pieces;
 	Shader shader;
 };
 

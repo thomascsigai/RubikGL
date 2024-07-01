@@ -8,7 +8,7 @@ int main(void)
     if (!window.init())
         return -1;
 
-    Cube cube = Cube();
+    Cube* cube = new Cube();
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -17,10 +17,12 @@ int main(void)
     {
         window.clear();
 
-        cube.draw();
+        window.draw_main_frame(cube);
+        cube->draw();
 
         window.update();
     }
+    window.cleanup_imGui();
 
     return 0;
 }

@@ -1,7 +1,7 @@
 #include <window.hpp>
 
 Window::Window(int width, int height, const std::string& name)
-    : width(width), height(height), name(name), window(nullptr) {}
+    : width(width), height(height), name(name), window(nullptr), io(nullptr) {}
 
 Window::~Window()
 {
@@ -16,6 +16,8 @@ bool Window::init()
 
     if (!init_GLEW())
         return false;
+
+    init_imGui();
 
     return true;
 }
@@ -77,6 +79,65 @@ void Window::update()
 {
     glfwSwapBuffers(window);
     glfwPollEvents();
+}
+
+void Window::init_imGui()
+{
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    io = &ImGui::GetIO(); (void)io;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
+}
+
+void Window::new_imGui_frame()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+void Window::render_imGui()
+{
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Window::cleanup_imGui()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
+  
+void Window::draw_main_frame(Cube*& cube)
+{
+    new_imGui_frame();
+
+    ImGui::Begin("Cube Generation");
+
+    ImGui::SliderInt("Cube Size", &settings.tempCubeSize, 2, 10);
+    if (ImGui::Button("Generate"))
+    {
+        delete cube;
+        cube = new Cube(settings.tempCubeSize);
+        settings.cubeSize = settings.tempCubeSize;
+    }
+
+    ImGui::Checkbox("Show Polygons", &settings.showPolygons);
+    if (settings.showPolygons)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
+    ImGui::End();
+
+    render_imGui();
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

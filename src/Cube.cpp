@@ -17,18 +17,28 @@ Cube::Cube(unsigned int size) : size(size), shader(VSHADER_PATH, FSHADER_PATH)
 				float scale = 1.5f / size;
 				glm::vec3 pos = glm::vec3(i - offset, j - offset, k - offset);
 
-				Piece piece = Piece(pos, glm::vec3(1.0f, 1.0f, 1.0f), scale);
+				Piece* piece = new Piece(pos, glm::vec3(1.0f, 1.0f, 1.0f), scale);
 				pieces.push_back(piece);
 			}
 		}
 	}
 }
 
+Cube::~Cube()
+{
+	for (Piece* piece : pieces)
+	{
+		piece->cleanup();
+		delete piece;
+	}
+	pieces.clear();
+}
+
 void Cube::draw()
 {
-	for (Piece piece : pieces)
+	for (Piece* piece : pieces)
 	{
 		shader.use();
-		piece.draw(shader);
+		piece->draw(shader);
 	}
 }
