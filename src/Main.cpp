@@ -8,10 +8,7 @@ int main(void)
     if (!window.init())
         return -1;
 
-    Cube* cube = new Cube();
-
-    // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    Cube* cube = new Cube(1);
 
     while (!window.should_close())
     {
