@@ -12,11 +12,19 @@ endif()
 project ("RubikGL")
 
 # Ajouter le répertoire contenant les fichiers en-tête
-include_directories(${CMAKE_SOURCE_DIR}/include/GLFW ${CMAKE_SOURCE_DIR}/include/GL ${CMAKE_SOURCE_DIR}/include/glm ${CMAKE_SOURCE_DIR}/include/imgui ${CMAKE_SOURCE_DIR}/include/imgui/backends
-${CMAKE_SOURCE_DIR}/include/ ${CMAKE_SOURCE_DIR}/include/shader ${CMAKE_SOURCE_DIR}/include/stb_image)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include/GLFW 
+    ${CMAKE_SOURCE_DIR}/include/GL 
+    ${CMAKE_SOURCE_DIR}/include/glm 
+    ${CMAKE_SOURCE_DIR}/include/imgui 
+    ${CMAKE_SOURCE_DIR}/include/imgui/backends
+    ${CMAKE_SOURCE_DIR}/include/ 
+    ${CMAKE_SOURCE_DIR}/include/shader 
+    ${CMAKE_SOURCE_DIR}/include/stb_image
+)
 
 # Copier les shaders dans le répertoire de build
-file(COPY ${CMAKE_SOURCE_DIR}/resources/shaders DESTINATION ${CMAKE_BINARY_DIR}/resources)
+file(COPY ${CMAKE_SOURCE_DIR}/resources/shaders ${CMAKE_SOURCE_DIR}/resources/textures DESTINATION ${CMAKE_BINARY_DIR}/resources)
 
 # Ajouter les fichiers source d'ImGui
 set(IMGUI_SRC

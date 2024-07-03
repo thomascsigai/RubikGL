@@ -7,6 +7,7 @@
 #define DEFAULT_SIZE 3
 #define VSHADER_PATH "resources/shaders/basicCube.vert"
 #define FSHADER_PATH "resources/shaders/basicCube.frag"
+#define TEXT_PATH "resources/textures/cubeTexture.png"
 
 class Cube
 {
@@ -23,6 +24,9 @@ private:
 
 	std::vector<Piece*> pieces;
 	Shader shader;
+	unsigned int texture;
+
+	void load_texture();
 };
 
 #endif

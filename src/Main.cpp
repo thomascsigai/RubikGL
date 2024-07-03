@@ -8,7 +8,7 @@ int main(void)
     if (!window.init())
         return -1;
 
-    Cube* cube = new Cube(1);
+    Cube* cube = new Cube();
 
     while (!window.should_close())
     {
