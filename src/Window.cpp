@@ -145,7 +145,7 @@ void Window::draw_main_frame(Cube*& cube)
     ImGui::SameLine();
     ImGui::Text("Rotate Cube");
 
-    ImGui::SliderFloat("Flip Cube", &settings.flipAngle, -4.0f, 4.0f);
+    ImGui::SliderFloat("Flip Cube", &settings.flipAngle, 0.0f, 180.0f);
 
     ImGui::SliderFloat("Camera Distance", &settings.zoom, 2.0f, 10.0f);
 

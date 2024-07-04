@@ -7,7 +7,7 @@ struct SETTINGS
 	int tempCubeSize = 3;
 	bool showPolygons = false;
 	float rotationAngle = 45;
-	float flipAngle = 1.5;
+	float flipAngle = 0;
 	float zoom = 3;
 };
 

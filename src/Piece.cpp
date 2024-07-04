@@ -88,6 +88,7 @@ void Piece::apply_transformations(Shader& shader, float rotationAngle, float zoo
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(scale));
+    model = glm::rotate(model, glm::radians(flipAngle), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::translate(model, pos);
 
     int viewLoc = glGetUniformLocation(shader.ID, "view");
