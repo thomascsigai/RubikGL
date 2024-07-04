@@ -15,7 +15,7 @@ class Piece
 public:
 	Piece(glm::vec3 pos, glm::vec3 color, float scale);
 
-	void draw(Shader& shader, unsigned int& texture);
+	void draw(Shader& shader, unsigned int& texture, float rotationAngle, float zoom, float flipAngle);
 	void cleanup();
 
 private:
@@ -23,6 +23,8 @@ private:
 	glm::vec3 color;
 	float scale;
 	unsigned int VAO, VBO;
+
+	void apply_transformations(Shader& shader, float rotationAngle, float zoom, float flipAngle);
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include <imgui_impl_opengl3.h>
 
 #include <cube.hpp>
+#include <settings.hpp>
 
 #include <iostream>
 #include <string>
@@ -15,13 +16,6 @@
 #define W_WIDTH 1600
 #define W_HEIGHT 900
 #define W_NAME "RubikGL"
-
-struct SETTINGS
-{
-	int cubeSize = 3;
-	int tempCubeSize = 3;
-	bool showPolygons = false;
-};
 
 class Window
 {
@@ -41,6 +35,8 @@ public:
 	void cleanup_imGui();
 
 	void draw_main_frame(Cube*& cube);
+
+	SETTINGS get_settings();
 
 private:
 

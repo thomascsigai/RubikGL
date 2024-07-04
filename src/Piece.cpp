@@ -62,10 +62,26 @@ Piece::Piece(glm::vec3 pos, glm::vec3 color, float scale) : pos(pos), color(colo
     glEnableVertexAttribArray(1);
 }
 
-void Piece::draw(Shader& shader, unsigned int& texture)
+void Piece::draw(Shader& shader, unsigned int& texture, float rotationAngle, float zoom, float flipAngle)
 {
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    apply_transformations(shader, rotationAngle, zoom, flipAngle);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void Piece::apply_transformations(Shader& shader, float rotationAngle, float zoom, float flipAngle)
+{
+    const float radius = zoom;
+
+    float camX = sin(glm::radians(rotationAngle)) * radius;
+    float camZ = cos(glm::radians(rotationAngle)) * radius;
+
+    glm::mat4 view;
+    view = glm::lookAt(glm::vec3(camX, 1.5f, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 
     glm::mat4 projection = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(60.0f), 1600.0f / 900.0f, 0.1f, 100.0f);
@@ -82,12 +98,6 @@ void Piece::draw(Shader& shader, unsigned int& texture)
 
     int modelLoc = glGetUniformLocation(shader.ID, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void Piece::cleanup()

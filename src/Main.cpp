@@ -1,5 +1,4 @@
 ﻿#include <window.hpp>
-#include <cube.hpp>
 
 int main(void)
 {
@@ -15,7 +14,7 @@ int main(void)
         window.clear();
 
         window.draw_main_frame(cube);
-        cube->draw();
+        cube->draw(window.get_settings());
 
         window.update();
     }

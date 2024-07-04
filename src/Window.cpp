@@ -133,11 +133,32 @@ void Window::draw_main_frame(Cube*& cube)
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    ImGui::SliderFloat("Rotate Cube", &settings.rotationAngle, -180.0f, 180.0f);
+
+    // Rotate Cube 45°
+    float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+    ImGui::PushButtonRepeat(true);
+    if (ImGui::ArrowButton("##left", ImGuiDir_Left)) { settings.rotationAngle -= 22.5f; }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::ArrowButton("##right", ImGuiDir_Right)) { settings.rotationAngle += 22.5f; }
+    ImGui::PopButtonRepeat();
+    ImGui::SameLine();
+    ImGui::Text("Rotate Cube");
+
+    ImGui::SliderFloat("Flip Cube", &settings.flipAngle, -4.0f, 4.0f);
+
+    ImGui::SliderFloat("Camera Distance", &settings.zoom, 2.0f, 10.0f);
+
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
     ImGui::End();
 
     render_imGui();
+}
+
+SETTINGS Window::get_settings()
+{
+    return settings;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

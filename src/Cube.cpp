@@ -17,8 +17,6 @@ Cube::Cube(unsigned int size) : size(size), shader(VSHADER_PATH, FSHADER_PATH)
 				float scale = 1.5f / size;
 				glm::vec3 pos = glm::vec3(i - offset, j - offset, k - offset);
 
-				std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
-
 				Piece* piece = new Piece(pos, glm::vec3(1.0f, 1.0f, 1.0f), scale);
 				pieces.push_back(piece);
 			}
@@ -37,13 +35,13 @@ Cube::~Cube()
 	pieces.clear();
 }
 
-void Cube::draw()
+void Cube::draw(SETTINGS settings)
 {
 	for (Piece* piece : pieces)
 	{
 		shader.use();
 		glUniform1i(glGetUniformLocation(shader.ID, "texture1"), 0);
-		piece->draw(shader, texture);
+		piece->draw(shader, texture, settings.rotationAngle, settings.zoom, settings.flipAngle);
 	}
 }
 

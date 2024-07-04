@@ -3,6 +3,7 @@
 
 #include <piece.hpp>
 #include <vector>
+#include <settings.hpp>
 
 #define DEFAULT_SIZE 3
 #define VSHADER_PATH "resources/shaders/basicCube.vert"
@@ -18,7 +19,7 @@ public:
 
 	unsigned int size;
 
-	void draw();
+	void draw(SETTINGS settings);
 
 private:
 
