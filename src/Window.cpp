@@ -35,7 +35,6 @@ bool Window::init_GLEW()
 
 bool Window::init_GLFW()
 {
-
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return false;
@@ -117,7 +116,7 @@ void Window::draw_main_frame(Cube*& cube)
 {
     new_imGui_frame();
 
-    ImGui::Begin("Cube Generation");
+    ImGui::Begin("RubikGL");
 
     ImGui::SliderInt("Cube Size", &settings.tempCubeSize, 2, 10);
     if (ImGui::Button("Generate"))
@@ -149,11 +148,74 @@ void Window::draw_main_frame(Cube*& cube)
 
     ImGui::SliderFloat("Camera Distance", &settings.zoom, 2.0f, 10.0f);
 
+    init_rotate_ui(cube);
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
     ImGui::End();
 
     render_imGui();
+}
+
+void Window::init_rotate_ui(Cube*& cube)
+{
+    float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+
+
+    if (ImGui::Button("L"))
+    {
+        cube->rotate_face(0, false, col);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("L'"))
+    {
+        cube->rotate_face(0, true, col);
+    }
+    if (ImGui::Button("M"))
+    {
+        cube->rotate_face(1, false, col);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("M '"))
+    {
+        cube->rotate_face(1, true, col);
+    }
+    if (ImGui::Button("R"))
+    {
+        cube->rotate_face(2, false, col);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("R '"))
+    {
+        cube->rotate_face(2, true, col);
+    }
+
+    if (ImGui::Button("D"))
+    {
+        cube->rotate_face(0, false, line);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("D'"))
+    {
+        cube->rotate_face(0, true, line);
+    }
+    if (ImGui::Button("E"))
+    {
+        cube->rotate_face(1, false, line);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("E'"))
+    {
+        cube->rotate_face(1, true, line);
+    }
+    if (ImGui::Button("U"))
+    {
+        cube->rotate_face(2, false, line);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("U'"))
+    {
+        cube->rotate_face(2, true, line);
+    }
 }
 
 SETTINGS Window::get_settings()

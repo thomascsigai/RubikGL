@@ -33,6 +33,7 @@ public:
 	void new_imGui_frame();
 	void render_imGui();
 	void cleanup_imGui();
+	void init_rotate_ui(Cube*& cube);
 
 	void draw_main_frame(Cube*& cube);
 
