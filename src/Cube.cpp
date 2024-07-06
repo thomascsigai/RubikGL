@@ -54,7 +54,6 @@ std::vector<Piece*> Cube::get_face_pieces(int faceIndex)
 	std::vector<Piece*> facePieces;
 	float offset = (size - 1) / 2.0f;
 
-
 	for (Piece* piece : pieces)
 	{
 		// cols rotation
@@ -90,7 +89,7 @@ void Cube::rotate_face(int faceIndex, bool contrary, RotateDirection dir)
 	rotationSpeed = angle / duration;
 	totalRotationAngle = angle;
 	rotationDir = dir;
-	
+
 	rotatingFacePieces = get_face_pieces(faceIndex);
 
 	rotating = true;
@@ -130,29 +129,39 @@ void Cube::updateFaceRotation(float deltaTime) {
 	float angleStep = rotationSpeed * deltaTime;
 	currentRotationAngle += angleStep;
 
-	// Stop condition
-	if ((angleStep >= 0 && currentRotationAngle >= totalRotationAngle) ||
-		(angleStep <= 0 && currentRotationAngle <= totalRotationAngle))
-	{
-		angleStep -= (currentRotationAngle - totalRotationAngle);
-		rotating = false;
-
-		//for (Piece* piece : rotatingFacePieces)
-		//{
-		//	glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(angleStep), rotVec / angleStep); // Z-axis rotation
-		//	std::cout << glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)).x << " " << glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)).y << " " << glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)).z << std::endl;
-		//	std::cout << round(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)).x) << " " << round(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)).y) << " " << round(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)).z) << std::endl;
-		//	piece->set_pos(round(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f))));
-		//}
-	}
-
 	glm::vec3 rotVec;
 	if (rotationDir == line) rotVec = glm::vec3(0.0f, angleStep, 0.0f);
 	if (rotationDir == col) rotVec = glm::vec3(angleStep, 0.0f, 0.0f);
 	if (rotationDir == face) rotVec = glm::vec3(0.0f, 0.0f, angleStep);
 
+	// Stop condition
+	if ((angleStep >= 0 && currentRotationAngle >= totalRotationAngle) ||
+		(angleStep <= 0 && currentRotationAngle <= totalRotationAngle))
+	{
+		angleStep -= (currentRotationAngle - totalRotationAngle);
+		if (rotationDir == line) rotVec = glm::vec3(0.0f, angleStep, 0.0f);
+		if (rotationDir == col) rotVec = glm::vec3(angleStep, 0.0f, 0.0f);
+		if (rotationDir == face) rotVec = glm::vec3(0.0f, 0.0f, angleStep);
+		rotating = false;
+
+		std::cout << "new Pos :" << std::endl;
+
+		for (Piece* piece : rotatingFacePieces)
+		{
+			piece->set_pos(round(piece->get_pos()));
+			piece->set_rot(round(piece->get_rot() + rotVec));
+;			std::cout << piece->get_rot().x << " " << piece->get_rot().y << " " << piece->get_rot().z << std::endl;
+		}
+
+		std::cout << std::endl << std::endl;
+		rotatingFacePieces.clear();
+		
+	}
+
 	for (Piece* piece : rotatingFacePieces)
 	{
+		glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(angleStep), rotVec / angleStep);
+		piece->set_pos(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)));
 		piece->set_rot(piece->get_rot() + rotVec);
 	}
 }
