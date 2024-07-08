@@ -144,13 +144,15 @@ void Cube::updateFaceRotation(float deltaTime) {
 		if (rotationDir == face) rotVec = glm::vec3(0.0f, 0.0f, angleStep);
 		rotating = false;
 
-		std::cout << "new Rot :" << std::endl;
-
 		for (Piece* piece : rotatingFacePieces)
 		{
-			piece->set_pos(round(piece->get_pos()));
+			if (size % 2 == 0)
+				piece->set_pos(roundToNearestHalf(piece->get_pos()));
+			else
+				piece->set_pos(round(piece->get_pos()));
+
+			std::cout << piece->get_pos().x << " " << piece->get_pos().y << " " << piece->get_pos().z << std::endl;
 			piece->update_rotation(rotVec);
-;			std::cout << piece->get_rot().x << " " << piece->get_rot().y << " " << piece->get_rot().z << std::endl;
 		}
 
 		std::cout << std::endl << std::endl;
@@ -164,4 +166,12 @@ void Cube::updateFaceRotation(float deltaTime) {
 		piece->set_pos(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)));
 		piece->update_rotation(rotVec);
 	}
+}
+
+glm::vec3 roundToNearestHalf(glm::vec3 vec) {
+	float x = round(vec.x * 2.0) / 2.0;
+	float y = round(vec.y * 2.0) / 2.0;
+	float z = round(vec.z * 2.0) / 2.0;
+
+	return glm::vec3(x, y, z);
 }

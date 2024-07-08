@@ -45,4 +45,6 @@ private:
 	void updateFaceRotation(float deltaTime);
 };
 
+glm::vec3 roundToNearestHalf(glm::vec3 vec);
+
 #endif
