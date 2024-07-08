@@ -89,9 +89,9 @@ void Piece::apply_transformations(Shader& shader, float rotationAngle, float zoo
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(scale));
+    model = glm::rotate(model, glm::radians(flipAngle), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::translate(model, pos);
     model = model * glm::mat4_cast(orientation);
-    model = glm::rotate(model, glm::radians(flipAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 
     int viewLoc = glGetUniformLocation(shader.ID, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));

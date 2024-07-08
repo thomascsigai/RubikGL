@@ -216,6 +216,24 @@ void Window::init_rotate_ui(Cube*& cube)
     {
         cube->rotate_face(2, true, line);
     }
+    if (ImGui::Button("B"))
+    {
+        cube->rotate_face(0, false, face);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("B''"))
+    {
+        cube->rotate_face(0, true, face);
+    }
+    if (ImGui::Button("F"))
+    {
+        cube->rotate_face(2, false, face);
+    }
+    ImGui::SameLine(0.0f, spacing);
+    if (ImGui::Button("F''"))
+    {
+        cube->rotate_face(2, true, face);
+    }
 }
 
 SETTINGS Window::get_settings()
