@@ -16,6 +16,7 @@ public:
 	Piece(glm::vec3 pos, float scale);
 
 	void draw(Shader& shader, unsigned int& texture, float rotationAngle, float zoom, float flipAngle);
+	void update_rotation(glm::vec3 rotationDelta);
 	void cleanup();
 
 	glm::vec3 get_pos();
@@ -26,6 +27,7 @@ public:
 private:
 	glm::vec3 pos;
 	glm::vec3 rot;
+	glm::quat orientation;
 	float scale;
 	unsigned int VAO, VBO;
 

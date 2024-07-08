@@ -45,7 +45,7 @@ const float cubeVertices[] = {
         -0.5f,  0.5f, -0.5f,  0.75f, 0.5f
 };
 
-Piece::Piece(glm::vec3 pos, float scale) : pos(pos), scale(scale), rot(glm::vec3(0.0f))
+Piece::Piece(glm::vec3 pos, float scale) : pos(pos), scale(scale), rot(glm::vec3(0.0f)), orientation(glm::quat(glm::radians(rot)))
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -89,12 +89,9 @@ void Piece::apply_transformations(Shader& shader, float rotationAngle, float zoo
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(scale));
-    model = glm::rotate(model, glm::radians(flipAngle), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::translate(model, pos);
-    model = glm::rotate(model, glm::radians(rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
+    model = model * glm::mat4_cast(orientation);
+    model = glm::rotate(model, glm::radians(flipAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 
     int viewLoc = glGetUniformLocation(shader.ID, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -104,6 +101,19 @@ void Piece::apply_transformations(Shader& shader, float rotationAngle, float zoo
 
     int modelLoc = glGetUniformLocation(shader.ID, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+}
+
+void Piece::update_rotation(glm::vec3 rotationDelta)
+{
+    glm::quat qPitch = glm::angleAxis(glm::radians(rotationDelta.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::quat qYaw = glm::angleAxis(glm::radians(rotationDelta.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::quat qRoll = glm::angleAxis(glm::radians(rotationDelta.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    orientation = qYaw * qPitch * qRoll * orientation;
+    orientation = glm::normalize(orientation);
+
+    rot = glm::eulerAngles(orientation);
+    rot = glm::degrees(rot);
 }
 
 void Piece::cleanup()

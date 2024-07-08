@@ -144,12 +144,12 @@ void Cube::updateFaceRotation(float deltaTime) {
 		if (rotationDir == face) rotVec = glm::vec3(0.0f, 0.0f, angleStep);
 		rotating = false;
 
-		std::cout << "new Pos :" << std::endl;
+		std::cout << "new Rot :" << std::endl;
 
 		for (Piece* piece : rotatingFacePieces)
 		{
 			piece->set_pos(round(piece->get_pos()));
-			piece->set_rot(round(piece->get_rot() + rotVec));
+			piece->update_rotation(rotVec);
 ;			std::cout << piece->get_rot().x << " " << piece->get_rot().y << " " << piece->get_rot().z << std::endl;
 		}
 
@@ -162,6 +162,6 @@ void Cube::updateFaceRotation(float deltaTime) {
 	{
 		glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(angleStep), rotVec / angleStep);
 		piece->set_pos(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)));
-		piece->set_rot(piece->get_rot() + rotVec);
+		piece->update_rotation(rotVec);
 	}
 }
