@@ -163,6 +163,8 @@ void Cube::update_face_rotation(float deltaTime) {
 			rotParams.erase(rotParams.begin());
 			
 		}
+
+		return;
 	}
 
 	for (Piece* piece : rotatingFacePieces)
@@ -184,7 +186,7 @@ void Cube::scramble()
 
 	scrambling = true;
 
-	for (int i = 0; i < 10 * size; i++) {
+	for (int i = 0; i < 10 * (size - 1); i++) {
 		RotationParams r;
 
 		r.faceIndex = faceIndexDist(gen);
