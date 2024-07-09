@@ -45,7 +45,7 @@ void Cube::draw(SETTINGS settings)
 	}
 
 	if (rotating) {
-		updateFaceRotation(0.016f); // Assuming 60 FPS, update with 16ms per frame
+		update_face_rotation(0.016f); // Assuming 60 FPS, update with 16ms per frame
 	}
 }
 
@@ -123,7 +123,7 @@ void Cube::load_texture()
 	stbi_image_free(data);
 }
 
-void Cube::updateFaceRotation(float deltaTime) {
+void Cube::update_face_rotation(float deltaTime) {
 	if (!rotating) return;
 
 	float angleStep = rotationSpeed * deltaTime;
@@ -151,13 +151,18 @@ void Cube::updateFaceRotation(float deltaTime) {
 			else
 				piece->set_pos(round(piece->get_pos()));
 
-			std::cout << piece->get_pos().x << " " << piece->get_pos().y << " " << piece->get_pos().z << std::endl;
 			piece->update_rotation(rotVec);
 		}
 
-		std::cout << std::endl << std::endl;
-		rotatingFacePieces.clear();
-		
+		if (rotParams.empty())
+			scrambling = false;
+
+		if (scrambling)
+		{
+			rotate_face(rotParams[0].faceIndex, rotParams[0].contrary, rotParams[0].dir);
+			rotParams.erase(rotParams.begin());
+			
+		}
 	}
 
 	for (Piece* piece : rotatingFacePieces)
@@ -166,6 +171,41 @@ void Cube::updateFaceRotation(float deltaTime) {
 		piece->set_pos(glm::vec3(rotation * glm::vec4(piece->get_pos(), 1.0f)));
 		piece->update_rotation(rotVec);
 	}
+}
+
+void Cube::scramble()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	std::uniform_int_distribution<> faceIndexDist(0, size - 1);
+	std::uniform_int_distribution<> boolDist(0, 1);
+	std::uniform_int_distribution<> dirDist(0, 2);
+
+	scrambling = true;
+
+	for (int i = 0; i < 10 * size; i++) {
+		RotationParams r;
+
+		r.faceIndex = faceIndexDist(gen);
+		r.contrary = boolDist(gen) == 0 ? true : false;
+
+		switch (dirDist(gen)) {
+		case 0:
+			r.dir = col;
+			break;
+		case 1:
+			r.dir = line;
+			break;
+		case 2:
+			r.dir = face;
+			break;
+		}
+
+		rotParams.push_back(r);
+	}
+
+	rotate_face(rotParams[0].faceIndex, rotParams[0].contrary, rotParams[0].dir);
 }
 
 glm::vec3 roundToNearestHalf(glm::vec3 vec) {

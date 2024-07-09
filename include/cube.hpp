@@ -4,6 +4,7 @@
 #include <piece.hpp>
 #include <vector>
 #include <settings.hpp>
+#include <random>
 
 #define DEFAULT_SIZE 3
 #define ROTATION_DURATION 0.5f
@@ -13,6 +14,12 @@
 #define TEXT_PATH "resources/textures/cubeTexture.png"
 
 enum RotateDirection { line, col, face};
+
+struct RotationParams {
+	int faceIndex;
+	bool contrary;
+	RotateDirection dir;
+};
 
 class Cube
 {
@@ -25,6 +32,7 @@ public:
 
 	void draw(SETTINGS settings);
 	void rotate_face(int faceIndex, bool contrary, RotateDirection dir);
+	void scramble();
 
 private:
 
@@ -40,9 +48,12 @@ private:
 	float rotationSpeed;
 	RotateDirection rotationDir;
 
+	bool scrambling = false;
+	std::vector<RotationParams> rotParams = {};
+
 	void load_texture();
 	std::vector<Piece*> get_face_pieces(int faceIndex);
-	void updateFaceRotation(float deltaTime);
+	void update_face_rotation(float deltaTime);
 };
 
 glm::vec3 roundToNearestHalf(glm::vec3 vec);

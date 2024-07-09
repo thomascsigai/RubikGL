@@ -150,6 +150,11 @@ void Window::draw_main_frame(Cube*& cube)
 
     init_rotate_ui(cube);
 
+    if (ImGui::Button("Scramble"))
+    {
+        cube->scramble();
+    }
+
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
     ImGui::End();
 
