@@ -17,7 +17,7 @@ Cube::Cube(unsigned int size) : size(size), shader(VSHADER_PATH, FSHADER_PATH)
 				float scale = 1.5f / size;
 				glm::vec3 pos = glm::vec3(i - offset, j - offset, k - offset);
 
-				Piece* piece = new Piece(pos, scale);
+				Piece* piece = new Piece(pos, scale, size);
 				pieces.push_back(piece);
 			}
 		}
@@ -35,7 +35,7 @@ Cube::~Cube()
 	pieces.clear();
 }
 
-void Cube::draw(SETTINGS settings)
+void Cube::draw(SETTINGS settings, GLfloat deltaTime)
 {
 	for (Piece* piece : pieces)
 	{
@@ -45,7 +45,7 @@ void Cube::draw(SETTINGS settings)
 	}
 
 	if (rotating) {
-		update_face_rotation(0.016f); // Assuming 60 FPS, update with 16ms per frame
+		update_face_rotation(deltaTime);
 	}
 }
 
@@ -82,7 +82,8 @@ void Cube::rotate_face(int faceIndex, bool contrary, RotateDirection dir)
 {
 	if (rotating) return;
 
-	float angle = 90.0f, duration = ROTATION_DURATION;
+	float angle = 90.0f, duration = 0.0f;
+	scrambling ? duration = SCRAMBLE_ROTATION_DURATION : duration = ROTATION_DURATION;
 	if (!contrary) angle *= -1;
 
 	rotatingFaceIndex = faceIndex;
@@ -123,7 +124,7 @@ void Cube::load_texture()
 	stbi_image_free(data);
 }
 
-void Cube::update_face_rotation(float deltaTime) {
+void Cube::update_face_rotation(GLfloat deltaTime) {
 	if (!rotating) return;
 
 	float angleStep = rotationSpeed * deltaTime;

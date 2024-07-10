@@ -118,7 +118,7 @@ void Window::draw_main_frame(Cube*& cube)
 
     ImGui::Begin("RubikGL");
 
-    ImGui::SliderInt("Cube Size", &settings.tempCubeSize, 2, 10);
+    ImGui::SliderInt("Cube Size", &settings.tempCubeSize, 2, 5);
     if (ImGui::Button("Generate"))
     {
         delete cube;

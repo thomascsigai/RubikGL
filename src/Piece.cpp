@@ -2,7 +2,7 @@
 
 const float cubeVertices[] = {
       // Pos                // Tex Coords
-        -0.5f, -0.5f, -0.5f,  0.25f, 0.5f, // Red
+        -0.5f, -0.5f, -0.5f,  0.25f, 0.5f, // Red - Back
          0.5f, -0.5f, -0.5f,  0.5f, 0.5f,
          0.5f,  0.5f, -0.5f,  0.5f, 1.0f,
          0.5f,  0.5f, -0.5f,  0.5f, 1.0f,
@@ -17,20 +17,20 @@ const float cubeVertices[] = {
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
         -0.5f,  0.5f,  0.5f,  0.25f, 0.0f, // Green - Left
-        -0.5f,  0.5f, -0.5f,  0.5f, 0.0f,               
-        -0.5f, -0.5f, -0.5f,  0.5f, 0.5f,               
-        -0.5f, -0.5f, -0.5f,  0.5f, 0.5f,               
+        -0.5f,  0.5f, -0.5f,  0.5f,  0.0f,               
+        -0.5f, -0.5f, -0.5f,  0.5f,  0.5f,               
+        -0.5f, -0.5f, -0.5f,  0.5f,  0.5f,               
         -0.5f, -0.5f,  0.5f,  0.25f, 0.5f,              
         -0.5f,  0.5f,  0.5f,  0.25f, 0.0f,              
 
-         0.5f,  0.5f,  0.5f,  0.5f, 0.5f, // Blue
+         0.5f,  0.5f,  0.5f,  0.5f,  0.5f,  // Blue - Right
          0.5f,  0.5f, -0.5f,  0.75f, 0.5f,
          0.5f, -0.5f, -0.5f,  0.75f, 1.0f,
          0.5f, -0.5f, -0.5f,  0.75f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.5f, 1.0f,
-         0.5f,  0.5f,  0.5f,  0.5f, 0.5f,
+         0.5f, -0.5f,  0.5f,  0.5f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.5f,  0.5f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.5f,  // White       
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.5f,  // White - Bottom 
          0.5f, -0.5f, -0.5f,  0.25f, 0.5f,                
          0.5f, -0.5f,  0.5f,  0.25f, 1.0f,                
          0.5f, -0.5f,  0.5f,  0.25f, 1.0f,                
@@ -45,15 +45,18 @@ const float cubeVertices[] = {
         -0.5f,  0.5f, -0.5f,  0.75f, 0.5f
 };
 
-Piece::Piece(glm::vec3 pos, float scale) : pos(pos), scale(scale), rot(glm::vec3(0.0f)), orientation(glm::quat(glm::radians(rot)))
+Piece::Piece(glm::vec3 pos, float scale, unsigned int cubeSize) : pos(pos), scale(scale), rot(glm::vec3(0.0f)), orientation(glm::quat(glm::radians(rot))), cubeSize(cubeSize)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
     glBindVertexArray(VAO);
 
+    float vertices[180];
+    setup_vertices(vertices);
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -62,10 +65,85 @@ Piece::Piece(glm::vec3 pos, float scale) : pos(pos), scale(scale), rot(glm::vec3
     glEnableVertexAttribArray(1);
 }
 
+void Piece::setup_vertices(float* vertices)
+{
+    float offset = (cubeSize - 1) / 2.0f;
+
+    for (int i = 0; i < 180; i++)
+    {
+        vertices[i] = cubeVertices[i];
+    }
+
+    if (pos.x + offset != cubeSize - 1)
+    {
+        // right face becomes black
+        vertices[93] = 0.5f;    vertices[94] = 0.0f;
+        vertices[98] = 0.75f;   vertices[99] = 0.0f;
+        vertices[103] = 0.75f;  vertices[104] = 0.5f;
+        vertices[108] = 0.75f;  vertices[109] = 0.5f;
+        vertices[113] = 0.5f;   vertices[114] = 0.5f;
+        vertices[118] = 0.5f;   vertices[119] = 0.0f;
+    }
+
+    if (pos.x + offset != 0)
+    {
+        //left face becomes black
+        vertices[63] = 0.5f;    vertices[64] = 0.0f;
+        vertices[68] = 0.75f;   vertices[69] = 0.0f;
+        vertices[73] = 0.75f;   vertices[74] = 0.5f;
+        vertices[78] = 0.75f;   vertices[79] = 0.5f;
+        vertices[83] = 0.5f;    vertices[84] = 0.5f;
+        vertices[88] = 0.5f;    vertices[89] = 0.0f;
+    }
+
+    if (pos.y + offset != cubeSize - 1)
+    {
+        //top face becomes black
+        vertices[153] = 0.5f;   vertices[154] = 0.0f;
+        vertices[158] = 0.75f;  vertices[159] = 0.0f;
+        vertices[163] = 0.75f;  vertices[164] = 0.5f;
+        vertices[168] = 0.75f;  vertices[169] = 0.5f;
+        vertices[173] = 0.5f;   vertices[174] = 0.5f;
+        vertices[178] = 0.5f;   vertices[179] = 0.0f;
+    }
+
+    if (pos.y + offset != 0)
+    {
+        //bottom face becomes black
+        vertices[123] = 0.5f;   vertices[124] = 0.0f;
+        vertices[128] = 0.75f;  vertices[129] = 0.0f;
+        vertices[133] = 0.75f;  vertices[134] = 0.5f;
+        vertices[138] = 0.75f;  vertices[139] = 0.5f;
+        vertices[143] = 0.5f;   vertices[144] = 0.5f;
+        vertices[148] = 0.5f;   vertices[149] = 0.0f;
+    }
+
+    if (pos.z + offset != cubeSize - 1)
+    {
+        //back face becomes black
+        vertices[33] = 0.5f;    vertices[34] = 0.0f;
+        vertices[38] = 0.75f;   vertices[39] = 0.0f;
+        vertices[43] = 0.75f;   vertices[44] = 0.5f;
+        vertices[48] = 0.75f;   vertices[49] = 0.5f;
+        vertices[53] = 0.5f;    vertices[54] = 0.5f;
+        vertices[58] = 0.5f;    vertices[59] = 0.0f;
+    }
+
+    if (pos.z + offset != 0)
+    {
+        //back face becomes black
+        vertices[3] = 0.5f;     vertices[4] = 0.0f;
+        vertices[8] = 0.75f;    vertices[9] = 0.0f;
+        vertices[13] = 0.75f;   vertices[14] = 0.5f;
+        vertices[18] = 0.75f;   vertices[19] = 0.5f;
+        vertices[23] = 0.5f;    vertices[24] = 0.5f;
+        vertices[28] = 0.5f;    vertices[29] = 0.0f;
+    }
+}
+
 void Piece::draw(Shader& shader, unsigned int& texture, float rotationAngle, float zoom, float flipAngle)
 {
     apply_transformations(shader, rotationAngle, zoom, flipAngle);
-
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);

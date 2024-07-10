@@ -7,7 +7,8 @@
 #include <random>
 
 #define DEFAULT_SIZE 3
-#define ROTATION_DURATION 0.5f
+#define ROTATION_DURATION 0.4f
+#define SCRAMBLE_ROTATION_DURATION 0.3f
 
 #define VSHADER_PATH "resources/shaders/basicCube.vert"
 #define FSHADER_PATH "resources/shaders/basicCube.frag"
@@ -30,7 +31,7 @@ public:
 
 	unsigned int size;
 
-	void draw(SETTINGS settings);
+	void draw(SETTINGS settings, GLfloat deltaTime);
 	void rotate_face(int faceIndex, bool contrary, RotateDirection dir);
 	void scramble();
 
@@ -53,7 +54,7 @@ private:
 
 	void load_texture();
 	std::vector<Piece*> get_face_pieces(int faceIndex);
-	void update_face_rotation(float deltaTime);
+	void update_face_rotation(GLfloat deltaTime);
 };
 
 glm::vec3 roundToNearestHalf(glm::vec3 vec);

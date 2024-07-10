@@ -13,7 +13,7 @@
 class Piece
 {
 public:
-	Piece(glm::vec3 pos, float scale);
+	Piece(glm::vec3 pos, float scale, unsigned int cubeSize);
 
 	void draw(Shader& shader, unsigned int& texture, float rotationAngle, float zoom, float flipAngle);
 	void update_rotation(glm::vec3 rotationDelta);
@@ -30,8 +30,10 @@ private:
 	glm::quat orientation;
 	float scale;
 	unsigned int VAO, VBO;
+	unsigned int cubeSize;
 
 	void apply_transformations(Shader& shader, float rotationAngle, float zoom, float flipAngle);
+	void setup_vertices(float* vertices);
 };
 
 #endif
