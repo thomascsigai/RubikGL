@@ -180,7 +180,7 @@ void Window::init_rotate_ui(Cube*& cube)
         cube->rotate_face(1, false, col);
     }
     ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("M '"))
+    if (ImGui::Button("M'"))
     {
         cube->rotate_face(1, true, col);
     }
@@ -189,7 +189,7 @@ void Window::init_rotate_ui(Cube*& cube)
         cube->rotate_face(2, false, col);
     }
     ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("R '"))
+    if (ImGui::Button("R'"))
     {
         cube->rotate_face(2, true, col);
     }
@@ -226,7 +226,7 @@ void Window::init_rotate_ui(Cube*& cube)
         cube->rotate_face(0, false, face);
     }
     ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("B''"))
+    if (ImGui::Button("B'"))
     {
         cube->rotate_face(0, true, face);
     }
@@ -235,7 +235,7 @@ void Window::init_rotate_ui(Cube*& cube)
         cube->rotate_face(2, false, face);
     }
     ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("F''"))
+    if (ImGui::Button("F'"))
     {
         cube->rotate_face(2, true, face);
     }
