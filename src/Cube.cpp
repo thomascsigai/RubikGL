@@ -84,6 +84,7 @@ void Cube::rotate_face(int faceIndex, bool contrary, RotateDirection dir)
 
 	float angle = 90.0f, duration = 0.0f;
 	scrambling ? duration = SCRAMBLE_ROTATION_DURATION : duration = ROTATION_DURATION;
+	if (dir == face) angle *= -1;
 	if (!contrary) angle *= -1;
 
 	rotatingFaceIndex = faceIndex;

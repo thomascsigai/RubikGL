@@ -1,7 +1,7 @@
 #include <window.hpp>
 
 Window::Window(int width, int height, const std::string& name)
-    : width(width), height(height), name(name), window(nullptr), io(nullptr) {}
+    : width(width), height(height), name(name), window(nullptr), io(nullptr), deltaTime(0.0f), lastFrame(0.0f), cube(nullptr) {}
 
 Window::~Window()
 {
@@ -57,6 +57,8 @@ bool Window::init_GLFW()
 
     glViewport(0, 0, W_WIDTH, W_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetWindowUserPointer(window, this);
+    glfwSetKeyCallback(window, keyCallback);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -72,6 +74,12 @@ void Window::clear()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    GLfloat currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
+    update_view_rotation();
 }
 
 void Window::update()
@@ -112,8 +120,10 @@ void Window::cleanup_imGui()
     ImGui::DestroyContext();
 }
   
-void Window::draw_main_frame(Cube*& cube)
+void Window::draw_main_frame(Cube*& _cube)
 {
+    cube = _cube;
+
     new_imGui_frame();
 
     ImGui::Begin("RubikGL");
@@ -148,7 +158,7 @@ void Window::draw_main_frame(Cube*& cube)
 
     ImGui::SliderFloat("Camera Distance", &settings.zoom, 2.0f, 10.0f);
 
-    init_rotate_ui(cube);
+    init_rotate_ui();
 
     if (ImGui::Button("Scramble"))
     {
@@ -161,10 +171,9 @@ void Window::draw_main_frame(Cube*& cube)
     render_imGui();
 }
 
-void Window::init_rotate_ui(Cube*& cube)
+void Window::init_rotate_ui()
 {
     float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
-
 
     if (ImGui::Button("L"))
     {
@@ -244,6 +253,181 @@ void Window::init_rotate_ui(Cube*& cube)
 SETTINGS Window::get_settings()
 {
     return settings;
+}
+
+void Window::processInput(int key, int scancode, int action, int mods)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        shiftDown = true;
+    else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+        shiftDown = false;
+
+    
+
+    if (!viewRotating && action == GLFW_PRESS)
+    {
+        RotateDirection dir;
+        int faceIndex = 0;
+        // rotIndex value : 0 = orange face front, 1 = blue face front, ... 
+        int rotIndex = abs((int)(round(settings.rotationAngle) / 90) % 4);
+
+        if ((int)round(settings.rotationAngle) % 180 == 40 || (int)round(settings.rotationAngle) % 180 == -140)
+            dir = col;
+        else
+            dir = face;
+
+        if (key == GLFW_KEY_L)
+        {
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 1 || rotIndex == 2)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 3)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+            else
+            {
+                if (rotIndex == 3 || rotIndex == 2)
+                    faceIndex = 2;
+                if (settings.rotationAngle < 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+                if (rotIndex == 1 || rotIndex == 2)
+                    shiftDown = !shiftDown;
+            }
+
+            if ((int)round(settings.rotationAngle) % 180 == 40 || (int)round(settings.rotationAngle) % 180 == -140)
+                dir = col;
+            else
+                dir = face;
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+        if (key == GLFW_KEY_M)
+        {
+            faceIndex = 1;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 2 || rotIndex == 3)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+            else
+            {
+                if (rotIndex == 1 || rotIndex == 2)
+                    shiftDown = !shiftDown;
+            }
+
+            if ((int)round(settings.rotationAngle) % 180 == 40 || (int)round(settings.rotationAngle) % 180 == -140)
+                dir = col;
+            else
+                dir = face;
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+        if (key == GLFW_KEY_R)
+        {
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 0 || rotIndex == 3)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 3)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+            else
+            {
+                if (rotIndex == 3 || rotIndex == 2)
+                    faceIndex = 2;
+                if (settings.rotationAngle > 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+                if (rotIndex == 1 || rotIndex == 2)
+                    shiftDown = !shiftDown;
+            }
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+    }
+
+    if (!keyDown && !viewRotating)
+    {
+        if (key == GLFW_KEY_RIGHT)
+            start_view_rotation("Right");
+        if (key == GLFW_KEY_LEFT)
+            start_view_rotation("Left");
+        if (key == GLFW_KEY_DOWN)
+            start_view_rotation("Down");
+        if (key == GLFW_KEY_UP)
+            start_view_rotation("Up");
+    }
+
+    if (action == GLFW_PRESS)
+        keyDown = true;
+
+    if (action == GLFW_RELEASE)
+        keyDown = false;
+}
+
+void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    if (win) {
+        win->processInput(key, scancode, action, mods);
+    }
+}
+
+void Window::start_view_rotation(std::string direction)
+{
+    if (viewRotating) false;
+
+    viewRotating = true;
+    currentViewRotationAngle = 0.0f;
+    totalViewRotationAngle = 90.0f;
+    viewRotDirection = direction;
+        
+    if (direction == "Down" || direction == "Left")
+    {
+        totalViewRotationAngle *= -1;
+        viewRotationSpeed *= -1;
+    }
+
+    if (direction == "Down" || direction == "Up")
+    {
+        totalViewRotationAngle *= 2;
+    }
+}
+
+void Window::update_view_rotation()
+{
+    if (!viewRotating) return;
+
+    float angleStep = viewRotationSpeed * deltaTime;
+    currentViewRotationAngle += angleStep;
+
+    // stop condition
+    if ((angleStep >= 0 && currentViewRotationAngle >= totalViewRotationAngle) ||
+        (angleStep <= 0 && currentViewRotationAngle <= totalViewRotationAngle))
+    {
+        angleStep -= (currentViewRotationAngle - totalViewRotationAngle);
+        viewRotating = false;
+        viewRotationSpeed = abs(viewRotationSpeed);
+    }
+
+    if (viewRotDirection == "Up")
+        settings.flipAngle += angleStep;
+    if (viewRotDirection == "Down")
+        settings.flipAngle += angleStep;
+    if (viewRotDirection == "Left")
+        settings.rotationAngle += angleStep;
+    if (viewRotDirection == "Right")
+        settings.rotationAngle += angleStep;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

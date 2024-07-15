@@ -7,8 +7,8 @@
 #include <random>
 
 #define DEFAULT_SIZE 3
-#define ROTATION_DURATION 0.4f
-#define SCRAMBLE_ROTATION_DURATION 0.3f
+#define ROTATION_DURATION 0.2f
+#define SCRAMBLE_ROTATION_DURATION 0.2f
 
 #define VSHADER_PATH "resources/shaders/basicCube.vert"
 #define FSHADER_PATH "resources/shaders/basicCube.frag"

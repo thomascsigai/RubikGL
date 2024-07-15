@@ -166,7 +166,7 @@ void Piece::apply_transformations(Shader& shader, float rotationAngle, float zoo
     projection = glm::perspective(glm::radians(60.0f), 1600.0f / 900.0f, 0.1f, 100.0f);
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(scale));
+    model = glm::scale(model, glm::vec3(scale));        
     model = glm::rotate(model, glm::radians(flipAngle), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::translate(model, pos);
     model = model * glm::mat4_cast(orientation);
