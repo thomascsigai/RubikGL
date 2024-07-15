@@ -119,13 +119,21 @@ void Window::cleanup_imGui()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
-  
-void Window::draw_main_frame(Cube*& _cube)
+
+void Window::draw_ui_frames(Cube*& _cube)
 {
     cube = _cube;
 
     new_imGui_frame();
 
+    draw_main_frame();
+    draw_controls_frame();
+
+    render_imGui();
+}
+  
+void Window::draw_main_frame()
+{
     ImGui::Begin("RubikGL");
 
     ImGui::SliderInt("Cube Size", &settings.tempCubeSize, 2, 5);
@@ -158,96 +166,49 @@ void Window::draw_main_frame(Cube*& _cube)
 
     ImGui::SliderFloat("Camera Distance", &settings.zoom, 2.0f, 10.0f);
 
-    init_rotate_ui();
-
     if (ImGui::Button("Scramble"))
     {
         cube->scramble();
     }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
-    ImGui::End();
 
-    render_imGui();
+    ImGui::End();
 }
 
-void Window::init_rotate_ui()
+void Window::draw_controls_frame()
 {
-    float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+    ImGui::Begin("Controls");
 
-    if (ImGui::Button("L"))
-    {
-        cube->rotate_face(0, false, col);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("L'"))
-    {
-        cube->rotate_face(0, true, col);
-    }
-    if (ImGui::Button("M"))
-    {
-        cube->rotate_face(1, false, col);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("M'"))
-    {
-        cube->rotate_face(1, true, col);
-    }
-    if (ImGui::Button("R"))
-    {
-        cube->rotate_face(2, false, col);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("R'"))
-    {
-        cube->rotate_face(2, true, col);
-    }
+    ImGui::SeparatorText("LINES:");
+    ImGui::Text("U -> Up");
+    ImGui::Text("LSHIFT + U -> Inverse Up");
+    ImGui::Text("D -> Down");
+    ImGui::Text("LSHIFT + D -> Inverse Down");
+    ImGui::Text("E -> Equator");
+    ImGui::Text("LSHIFT + E -> Inverse Equator");
 
-    if (ImGui::Button("D"))
-    {
-        cube->rotate_face(0, false, line);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("D'"))
-    {
-        cube->rotate_face(0, true, line);
-    }
-    if (ImGui::Button("E"))
-    {
-        cube->rotate_face(1, false, line);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("E'"))
-    {
-        cube->rotate_face(1, true, line);
-    }
-    if (ImGui::Button("U"))
-    {
-        cube->rotate_face(2, false, line);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("U'"))
-    {
-        cube->rotate_face(2, true, line);
-    }
-    if (ImGui::Button("B"))
-    {
-        cube->rotate_face(0, false, face);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("B'"))
-    {
-        cube->rotate_face(0, true, face);
-    }
-    if (ImGui::Button("F"))
-    {
-        cube->rotate_face(2, false, face);
-    }
-    ImGui::SameLine(0.0f, spacing);
-    if (ImGui::Button("F'"))
-    {
-        cube->rotate_face(2, true, face);
-    }
+    ImGui::SeparatorText("COLUMNS:");
+    ImGui::Text("L -> Left");
+    ImGui::Text("LSHIFT + L -> Inverse Left");
+    ImGui::Text("M -> Middle");
+    ImGui::Text("LSHIFT + M -> Inverse Middle");
+    ImGui::Text("R -> Right");
+    ImGui::Text("LSHIFT + R -> Inverse Right");
+
+    ImGui::SeparatorText("FACES:");
+    ImGui::Text("F -> Front");
+    ImGui::Text("LSHIFT + F -> Inverse Front");
+    ImGui::Text("B -> Back");
+    ImGui::Text("LSHIFT + B -> Inverse Back");
+
+    ImGui::SeparatorText("LINES:");
+    ImGui::Text("RIGHT ARROW -> Rotate Right");
+    ImGui::Text("LEFT ARROW -> Rotate Left");
+    ImGui::Text("UP ARROW -> Flip Cube");
+    ImGui::Text("DOWN ARROW -> Flip Cube");
+
+    ImGui::End();
 }
 
 SETTINGS Window::get_settings()
@@ -300,11 +261,6 @@ void Window::processInput(int key, int scancode, int action, int mods)
                     shiftDown = !shiftDown;
             }
 
-            if ((int)round(settings.rotationAngle) % 180 == 40 || (int)round(settings.rotationAngle) % 180 == -140)
-                dir = col;
-            else
-                dir = face;
-
             cube->rotate_face(faceIndex, shiftDown, dir);
         }
         if (key == GLFW_KEY_M)
@@ -323,11 +279,6 @@ void Window::processInput(int key, int scancode, int action, int mods)
                 if (rotIndex == 1 || rotIndex == 2)
                     shiftDown = !shiftDown;
             }
-
-            if ((int)round(settings.rotationAngle) % 180 == 40 || (int)round(settings.rotationAngle) % 180 == -140)
-                dir = col;
-            else
-                dir = face;
 
             cube->rotate_face(faceIndex, shiftDown, dir);
         }
@@ -349,6 +300,96 @@ void Window::processInput(int key, int scancode, int action, int mods)
                 if (settings.rotationAngle > 0)
                     faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
                 if (rotIndex == 1 || rotIndex == 2)
+                    shiftDown = !shiftDown;
+            }
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+
+        if (key == GLFW_KEY_U)
+        {
+            dir = line;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+                faceIndex = 2;
+            else
+                shiftDown = !shiftDown;
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+
+        if (key == GLFW_KEY_E)
+        {
+            dir = line;
+
+            faceIndex = 1;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 != 0)
+                shiftDown = !shiftDown;
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+
+        if (key == GLFW_KEY_D)
+        {
+            dir = line;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 != 0)
+            {
+                faceIndex = 2;
+                shiftDown = !shiftDown;
+            }
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+
+        if ((int)round(settings.rotationAngle) % 180 == 40 || (int)round(settings.rotationAngle) % 180 == -140)
+            dir = face;
+        else
+            dir = col;
+
+        if (key == GLFW_KEY_B)
+        {
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 2 || rotIndex == 3)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+            }
+            else
+            {
+                if (rotIndex == 0 || rotIndex == 3)
+                    faceIndex = 2;
+                if (rotIndex == 0 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+        }
+
+        if (key == GLFW_KEY_F)
+        {
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 1 || rotIndex == 0)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+            }
+            else
+            {
+                if (rotIndex == 1 || rotIndex == 2)
+                    faceIndex = 2;
+                if (rotIndex == 0 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
                     shiftDown = !shiftDown;
             }
 

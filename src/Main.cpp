@@ -12,8 +12,8 @@ int main(void)
     while (!window.should_close())
     {
         window.clear();
+        window.draw_ui_frames(cube);
 
-        window.draw_main_frame(cube);
         cube->draw(window.get_settings(), window.deltaTime);
 
         window.update();

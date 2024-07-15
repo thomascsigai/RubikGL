@@ -35,9 +35,8 @@ public:
 	void new_imGui_frame();
 	void render_imGui();
 	void cleanup_imGui();
-	void init_rotate_ui();
 
-	void draw_main_frame(Cube*& cube);
+	void draw_ui_frames(Cube*& _cube);
 
 	SETTINGS get_settings();
 	GLfloat deltaTime;
@@ -69,6 +68,9 @@ private:
 	void start_view_rotation(std::string direction);
 	void update_view_rotation();
 	void processInput(int key, int scancode, int action, int mods);
+
+	void draw_main_frame();
+	void draw_controls_frame();
 
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
