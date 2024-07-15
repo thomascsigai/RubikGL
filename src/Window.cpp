@@ -126,22 +126,24 @@ void Window::draw_ui_frames(Cube*& _cube)
 
     new_imGui_frame();
 
-    draw_main_frame();
+    draw_main_frame(_cube);
     draw_controls_frame();
 
     render_imGui();
 }
   
-void Window::draw_main_frame()
+void Window::draw_main_frame(Cube*& _cube)
 {
     ImGui::Begin("RubikGL");
 
     ImGui::SliderInt("Cube Size", &settings.tempCubeSize, 2, 5);
     if (ImGui::Button("Generate"))
     {
-        delete cube;
-        cube = new Cube(settings.tempCubeSize);
+        delete _cube;
+        _cube = new Cube(settings.tempCubeSize);
         settings.cubeSize = settings.tempCubeSize;
+
+        cube = _cube;
     }
 
     ImGui::Checkbox("Show Polygons", &settings.showPolygons);

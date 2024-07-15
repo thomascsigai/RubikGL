@@ -69,7 +69,7 @@ private:
 	void update_view_rotation();
 	void processInput(int key, int scancode, int action, int mods);
 
-	void draw_main_frame();
+	void draw_main_frame(Cube*& _cube);
 	void draw_controls_frame();
 
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
