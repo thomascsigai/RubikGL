@@ -9,6 +9,7 @@ struct SETTINGS
 	float rotationAngle = 40;
 	float flipAngle = 0;
 	float zoom = 3;
+	bool msaa = true;
 };
 
 #endif
