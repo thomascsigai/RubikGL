@@ -54,7 +54,7 @@ set_target_properties(glew32 PROPERTIES
 find_package(OpenGL REQUIRED)
 
 # Add source to this project's executable.
-add_executable (RubikGL "src/Main.cpp" ${IMGUI_SRC} "src/Window.cpp" "src/Cube.cpp" "src/Piece.cpp" "src/stb_image.cpp")
+add_executable (RubikGL "src/Main.cpp" ${IMGUI_SRC} "src/Window.cpp" "src/Cube.cpp" "src/Piece.cpp" "src/stb_image.cpp" "src/GradientBackground.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)

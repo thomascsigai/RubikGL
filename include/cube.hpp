@@ -30,6 +30,7 @@ public:
 	~Cube();
 
 	unsigned int size;
+	unsigned int numberOfMoves = 0;
 
 	void draw(SETTINGS settings, GLfloat deltaTime);
 	void rotate_face(int faceIndex, bool contrary, RotateDirection dir);

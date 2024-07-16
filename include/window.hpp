@@ -65,16 +65,21 @@ private:
 	bool keyDown = false;
 	bool shiftDown = false;
 
+	std::string lastMove = "";
+
 	void start_view_rotation(std::string direction);
 	void update_view_rotation();
 	void processInput(int key, int scancode, int action, int mods);
 
 	void draw_main_frame(Cube*& _cube);
 	void draw_controls_frame();
+	void draw_cube_infos_frame(Cube*& _cube);
 
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mygl_GradientBackground(float top_r, float top_g, float top_b, float top_a,
+	float bot_r, float bot_g, float bot_b, float bot_a);
 
 #endif

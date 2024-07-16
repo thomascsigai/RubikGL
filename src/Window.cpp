@@ -58,6 +58,7 @@ bool Window::init_GLFW()
     glViewport(0, 0, W_WIDTH, W_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetWindowUserPointer(window, this);
+    glfwSetWindowPos(window, 100, 100);
     glfwSetKeyCallback(window, keyCallback);
 
     glEnable(GL_DEPTH_TEST);
@@ -72,8 +73,10 @@ bool Window::should_close()
 
 void Window::clear()
 {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(1.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    mygl_GradientBackground(0.59, 0.74, 1.0, 1.0,
+        0.87, 0.89, 1.0, 1.0);
 
     GLfloat currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
@@ -128,6 +131,7 @@ void Window::draw_ui_frames(Cube*& _cube)
 
     draw_main_frame(_cube);
     draw_controls_frame();
+    draw_cube_infos_frame(_cube);
 
     render_imGui();
 }
@@ -213,6 +217,16 @@ void Window::draw_controls_frame()
     ImGui::End();
 }
 
+void Window::draw_cube_infos_frame(Cube*& _cube)
+{
+    ImGui::Begin("Cube Infos");
+
+    ImGui::Text("Last move : %s", lastMove.c_str());
+    ImGui::Text("Number of Moves : %u", cube->numberOfMoves);
+    
+    ImGui::End();
+}
+
 SETTINGS Window::get_settings()
 {
     return settings;
@@ -264,6 +278,13 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            
+            lastMove = "Left";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+
+            cube->numberOfMoves++;
+            
         }
         if (key == GLFW_KEY_M)
         {
@@ -283,6 +304,10 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            lastMove = "Middle";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+            cube->numberOfMoves++;
         }
         if (key == GLFW_KEY_R)
         {
@@ -306,6 +331,10 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            lastMove = "Right";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+            cube->numberOfMoves++;
         }
 
         if (key == GLFW_KEY_U)
@@ -318,6 +347,10 @@ void Window::processInput(int key, int scancode, int action, int mods)
                 shiftDown = !shiftDown;
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            lastMove = "Up";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+            cube->numberOfMoves++;
         }
 
         if (key == GLFW_KEY_E)
@@ -330,6 +363,10 @@ void Window::processInput(int key, int scancode, int action, int mods)
                 shiftDown = !shiftDown;
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            lastMove = "Equator";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+            cube->numberOfMoves++;
         }
 
         if (key == GLFW_KEY_D)
@@ -343,6 +380,10 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            lastMove = "Down";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+            cube->numberOfMoves++;
         }
 
         if ((int)round(settings.rotationAngle) % 180 == 40 || (int)round(settings.rotationAngle) % 180 == -140)
@@ -372,6 +413,10 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            lastMove = "Back";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+            cube->numberOfMoves++;
         }
 
         if (key == GLFW_KEY_F)
@@ -396,6 +441,10 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            lastMove = "Front";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+            cube->numberOfMoves++;
         }
     }
 
