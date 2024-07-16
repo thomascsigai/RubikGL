@@ -188,7 +188,7 @@ void Cube::scramble()
 
 	scrambling = true;
 
-	for (int i = 0; i < 10 * (size - 1); i++) {
+	for (int i = 0; i < 15 * (size - 1); i++) {
 		RotationParams r;
 
 		r.faceIndex = faceIndexDist(gen);
