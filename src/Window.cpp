@@ -142,7 +142,11 @@ void Window::draw_main_frame(Cube*& _cube)
     ImGui::Begin("RubikGL");
 
     ImGui::SeparatorText("CUBE SETTINGS");
-    ImGui::SliderInt("Cube Size", &settings.tempCubeSize, 2, 5);
+
+    ImGui::Text("Size"); ImGui::SameLine();
+    ImGui::RadioButton("2x2", &settings.tempCubeSize, 2); ImGui::SameLine();
+    ImGui::RadioButton("3x3", &settings.tempCubeSize, 3); ImGui::SameLine();
+    ImGui::RadioButton("4x4", &settings.tempCubeSize, 4);
     if (ImGui::Button("Reset"))
     {
         delete _cube;
@@ -183,32 +187,55 @@ void Window::draw_controls_frame()
 {
     ImGui::Begin("Controls");
 
-    ImGui::SeparatorText("LINES:");
+    ImGui::SeparatorText("ROTATION DIRECTION");
+    ImGui::Text("[KEY] -> Clockwise Rotation");
+    ImGui::Text("LSHIFT + [KEY] -> Counterclockwise Rotation");
+
+
+
+    ImGui::NewLine();
+    ImGui::SeparatorText("LINES");
     ImGui::Text("U -> Up");
-    ImGui::Text("LSHIFT + U -> Inverse Up");
+    if (settings.cubeSize == 4)
+        ImGui::Text("I -> Inner Up (u)");
+
+    if (settings.cubeSize == 3)
+        ImGui::Text("E -> Equator");
+
     ImGui::Text("D -> Down");
-    ImGui::Text("LSHIFT + D -> Inverse Down");
-    ImGui::Text("E -> Equator");
-    ImGui::Text("LSHIFT + E -> Inverse Equator");
+    if (settings.cubeSize == 4)
+        ImGui::Text("S -> Inner Down (d)");
+
+
 
     ImGui::NewLine();
-    ImGui::SeparatorText("COLUMNS:");
+    ImGui::SeparatorText("COLUMNS");
     ImGui::Text("L -> Left");
-    ImGui::Text("LSHIFT + L -> Inverse Left");
-    ImGui::Text("M -> Middle");
-    ImGui::Text("LSHIFT + M -> Inverse Middle");
+    if (settings.cubeSize == 4)
+        ImGui::Text("K -> Inner Left (u)");
+
+    if (settings.cubeSize == 3)
+        ImGui::Text("M -> Middle");
+
     ImGui::Text("R -> Right");
-    ImGui::Text("LSHIFT + R -> Inverse Right");
+    if (settings.cubeSize == 4)
+        ImGui::Text("T -> Inner Right (r)");
+
+
 
     ImGui::NewLine();
-    ImGui::SeparatorText("FACES:");
+    ImGui::SeparatorText("FACES");
     ImGui::Text("F -> Front");
-    ImGui::Text("LSHIFT + F -> Inverse Front");
+    if (settings.cubeSize == 4)
+        ImGui::Text("C -> Inner Front (f)");
     ImGui::Text("B -> Back");
-    ImGui::Text("LSHIFT + B -> Inverse Back");
+    if (settings.cubeSize == 4)
+        ImGui::Text("V -> Inner Back (b)");
+
+
 
     ImGui::NewLine();
-    ImGui::SeparatorText("ROTATE CUBE:");
+    ImGui::SeparatorText("ROTATE CUBE");
     ImGui::Text("RIGHT ARROW -> Rotate Right");
     ImGui::Text("LEFT ARROW -> Rotate Left");
     ImGui::Text("UP ARROW -> Flip Cube");
@@ -281,33 +308,38 @@ void Window::processInput(int key, int scancode, int action, int mods)
                     shiftDown = !shiftDown;
             }
 
-            cube->rotate_face(faceIndex, shiftDown, dir);
+            if (settings.cubeSize == 2 && faceIndex != 0) faceIndex = 1;
+
+            cube->rotate_face(faceIndex, !shiftDown, dir);
             cube->numberOfMoves++;
             
         }
         if (key == GLFW_KEY_M)
         {
-            lastMove = "Middle";
-            if (shiftDown)
-                lastMove = "Inverse " + lastMove;
-
-            faceIndex = 1;
-
-            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            if (settings.cubeSize != 2)
             {
-                if (rotIndex == 2 || rotIndex == 3)
-                    shiftDown = !shiftDown;
-                if (settings.rotationAngle < 0)
-                    shiftDown = !shiftDown;
-            }
-            else
-            {
-                if (rotIndex == 1 || rotIndex == 2)
-                    shiftDown = !shiftDown;
-            }
+                lastMove = "Middle";
+                if (shiftDown)
+                    lastMove = "Inverse " + lastMove;
 
-            cube->rotate_face(faceIndex, shiftDown, dir);
-            cube->numberOfMoves++;
+                faceIndex = 1;
+
+                if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+                {
+                    if (rotIndex == 2 || rotIndex == 3)
+                        shiftDown = !shiftDown;
+                    if (settings.rotationAngle < 0)
+                        shiftDown = !shiftDown;
+                }
+                else
+                {
+                    if (rotIndex == 1 || rotIndex == 2)
+                        shiftDown = !shiftDown;
+                }
+
+                cube->rotate_face(faceIndex, !shiftDown, dir);
+                cube->numberOfMoves++;
+            }
         }
         if (key == GLFW_KEY_R)
         {
@@ -334,6 +366,8 @@ void Window::processInput(int key, int scancode, int action, int mods)
                     shiftDown = !shiftDown;
             }
 
+            if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+
             cube->rotate_face(faceIndex, shiftDown, dir);
             cube->numberOfMoves++;
         }
@@ -351,25 +385,30 @@ void Window::processInput(int key, int scancode, int action, int mods)
             else
                 shiftDown = !shiftDown;
 
+            if (settings.cubeSize == 2 && faceIndex != 0) faceIndex = 1;
+
             cube->rotate_face(faceIndex, shiftDown, dir);
             cube->numberOfMoves++;
         }
 
         if (key == GLFW_KEY_E)
         {
-            lastMove = "Equator";
-            if (shiftDown)
-                lastMove = "Inverse " + lastMove;
+            if (settings.cubeSize != 2)
+            {
+                lastMove = "Equator";
+                if (shiftDown)
+                    lastMove = "Inverse " + lastMove;
 
-            dir = line;
+                dir = line;
 
-            faceIndex = 1;
+                faceIndex = 1;
 
-            if ((int)round(settings.flipAngle) / 180 % 2 != 0)
-                shiftDown = !shiftDown;
+                if ((int)round(settings.flipAngle) / 180 % 2 != 0)
+                    shiftDown = !shiftDown;
 
-            cube->rotate_face(faceIndex, shiftDown, dir);
-            cube->numberOfMoves++;
+                cube->rotate_face(faceIndex, !shiftDown, dir);
+                cube->numberOfMoves++;
+            }
         }
 
         if (key == GLFW_KEY_D)
@@ -386,7 +425,9 @@ void Window::processInput(int key, int scancode, int action, int mods)
                 shiftDown = !shiftDown;
             }
 
-            cube->rotate_face(faceIndex, shiftDown, dir);
+            if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+
+            cube->rotate_face(faceIndex, !shiftDown, dir);
             cube->numberOfMoves++;
         }
 
@@ -420,6 +461,8 @@ void Window::processInput(int key, int scancode, int action, int mods)
                     shiftDown = !shiftDown;
             }
 
+            if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+
             cube->rotate_face(faceIndex, shiftDown, dir);
             cube->numberOfMoves++;
         }
@@ -449,7 +492,9 @@ void Window::processInput(int key, int scancode, int action, int mods)
                     shiftDown = !shiftDown;
             }
 
-            cube->rotate_face(faceIndex, shiftDown, dir);
+            if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+
+            cube->rotate_face(faceIndex, !shiftDown, dir);
             cube->numberOfMoves++;
         }
     }
