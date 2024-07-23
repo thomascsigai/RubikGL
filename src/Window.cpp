@@ -139,7 +139,12 @@ void Window::draw_ui_frames(Cube*& _cube)
   
 void Window::draw_main_frame(Cube*& _cube)
 {
-    ImGui::Begin("RubikGL");
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    window_flags |= ImGuiWindowFlags_NoCollapse;
+
+    ImGui::Begin("Settings", NULL, window_flags);
 
     ImGui::SeparatorText("CUBE SETTINGS");
 
@@ -185,68 +190,239 @@ void Window::draw_main_frame(Cube*& _cube)
 
 void Window::draw_controls_frame()
 {
-    ImGui::Begin("Controls");
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    window_flags |= ImGuiWindowFlags_NoCollapse;
+
+    ImGui::Begin("Controls", NULL, window_flags);
 
     ImGui::SeparatorText("ROTATION DIRECTION");
-    ImGui::Text("[KEY] -> Clockwise Rotation");
-    ImGui::Text("LSHIFT + [KEY] -> Counterclockwise Rotation");
 
+    static ImGuiTableFlags flags = ImGuiTableFlags_RowBg;
+    flags |= ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersInnerV;
 
+    if (ImGui::BeginTable("Controls", 2, flags))
+    {
+        ImGui::TableSetupColumn("one", ImGuiTableColumnFlags_WidthFixed, 120.0f); 
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("[KEY]");
+        
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Clockwise Rotation");
+        
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("LSHIFT + [KEY]");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Counterclockwise Rotation");
+
+        ImGui::EndTable();
+    }
 
     ImGui::NewLine();
     ImGui::SeparatorText("LINES");
-    ImGui::Text("U -> Up");
-    if (settings.cubeSize == 4)
-        ImGui::Text("I -> Inner Up (u)");
 
-    if (settings.cubeSize == 3)
-        ImGui::Text("E -> Equator");
+    if (ImGui::BeginTable("Controls", 2, flags))
+    {
+        ImGui::TableSetupColumn("one", ImGuiTableColumnFlags_WidthFixed, 120.0f);
 
-    ImGui::Text("D -> Down");
-    if (settings.cubeSize == 4)
-        ImGui::Text("S -> Inner Down (d)");
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("U");
 
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Up");
 
+        if (settings.cubeSize == 4)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("I");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Inner Up (u)");
+        }
+
+        if (settings.cubeSize == 3)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("E");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Equator");
+        }
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("D");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Down");
+
+        if (settings.cubeSize == 4)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("S");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Inner Down (d)");
+        }
+
+        ImGui::EndTable();
+    }
 
     ImGui::NewLine();
     ImGui::SeparatorText("COLUMNS");
-    ImGui::Text("L -> Left");
-    if (settings.cubeSize == 4)
-        ImGui::Text("K -> Inner Left (l)");
 
-    if (settings.cubeSize == 3)
-        ImGui::Text("M -> Middle");
+    if (ImGui::BeginTable("Controls", 2, flags))
+    {
+        ImGui::TableSetupColumn("one", ImGuiTableColumnFlags_WidthFixed, 120.0f);
 
-    ImGui::Text("R -> Right");
-    if (settings.cubeSize == 4)
-        ImGui::Text("T -> Inner Right (r)");
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("L");
 
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Left");
 
+        if (settings.cubeSize == 4)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("K");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Inner Left (l)");
+        }
+
+        if (settings.cubeSize == 3)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("M");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Middle");
+        }
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("R");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Right");
+
+        if (settings.cubeSize == 4)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("T");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Inner Right (r)");
+        }
+
+        ImGui::EndTable();
+    }
 
     ImGui::NewLine();
     ImGui::SeparatorText("FACES");
-    ImGui::Text("F -> Front");
-    if (settings.cubeSize == 4)
-        ImGui::Text("C -> Inner Front (f)");
-    ImGui::Text("B -> Back");
-    if (settings.cubeSize == 4)
-        ImGui::Text("V -> Inner Back (b)");
+    if (ImGui::BeginTable("Controls", 2, flags))
+    {
+        ImGui::TableSetupColumn("one", ImGuiTableColumnFlags_WidthFixed, 120.0f);
 
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("F");
 
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Front");
+
+        if (settings.cubeSize == 4)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("C");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Inner Front (f)");
+        }
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("B");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Back");
+
+        if (settings.cubeSize == 4)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("V");
+
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Inner Back (b)");
+        }
+
+        ImGui::EndTable();
+    }
 
     ImGui::NewLine();
     ImGui::SeparatorText("ROTATE CUBE");
-    ImGui::Text("RIGHT ARROW -> Rotate Right");
-    ImGui::Text("LEFT ARROW -> Rotate Left");
-    ImGui::Text("UP ARROW -> Flip Cube");
-    ImGui::Text("DOWN ARROW -> Flip Cube");
+    if (ImGui::BeginTable("Controls", 2, flags))
+    {
+        ImGui::TableSetupColumn("one", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("RIGHT ARROW");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Rotate Right");
+        
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("LEFT ARROW");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Rotate Left");
+        
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("UP ARROW");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Flip Cube");
+        
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("DOWN ARROW");
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("Flip Cube");
+
+        ImGui::EndTable();
+    }
 
     ImGui::End();
 }
 
 void Window::draw_cube_infos_frame(Cube*& _cube)
 {
-    ImGui::Begin("Cube Infos");
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    window_flags |= ImGuiWindowFlags_NoCollapse;
+
+    ImGui::Begin("Cube Infos", NULL, window_flags);
 
     ImGui::Text("Last move : %s", lastMove.c_str());
     ImGui::Text("Number of Moves : %u", cube->numberOfMoves);
