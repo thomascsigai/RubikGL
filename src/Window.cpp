@@ -212,7 +212,7 @@ void Window::draw_controls_frame()
     ImGui::SeparatorText("COLUMNS");
     ImGui::Text("L -> Left");
     if (settings.cubeSize == 4)
-        ImGui::Text("K -> Inner Left (u)");
+        ImGui::Text("K -> Inner Left (l)");
 
     if (settings.cubeSize == 3)
         ImGui::Text("M -> Middle");
@@ -309,12 +309,45 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             if (settings.cubeSize == 2 && faceIndex != 0) faceIndex = 1;
+            if (settings.cubeSize == 4 && faceIndex != 0) faceIndex = 3;
 
             cube->rotate_face(faceIndex, !shiftDown, dir);
             cube->numberOfMoves++;
             
         }
-        if (key == GLFW_KEY_M)
+
+        if (key == GLFW_KEY_K && settings.cubeSize == 4)
+        {
+            lastMove = "Inner Left";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 1 || rotIndex == 2)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 3)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+            else
+            {
+                if (rotIndex == 3 || rotIndex == 2)
+                    faceIndex = 2;
+                if (settings.rotationAngle < 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+                if (rotIndex == 1 || rotIndex == 2)
+                    shiftDown = !shiftDown;
+            }
+
+            if (faceIndex == 0) faceIndex++;
+
+            cube->rotate_face(faceIndex, !shiftDown, dir);
+            cube->numberOfMoves++;
+        }
+
+        if (key == GLFW_KEY_M && settings.cubeSize == 3)
         {
             if (settings.cubeSize != 2)
             {
@@ -341,6 +374,7 @@ void Window::processInput(int key, int scancode, int action, int mods)
                 cube->numberOfMoves++;
             }
         }
+
         if (key == GLFW_KEY_R)
         {
             lastMove = "Right";
@@ -367,8 +401,41 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+            if (settings.cubeSize == 4 && faceIndex == 2) faceIndex = 3;
 
             cube->rotate_face(faceIndex, shiftDown, dir);
+            cube->numberOfMoves++;
+        }
+
+        if (key == GLFW_KEY_T && settings.cubeSize == 4)
+        {
+            lastMove = "Inner Right";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 1 || rotIndex == 2)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 3)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+            else
+            {
+                if (rotIndex == 3 || rotIndex == 2)
+                    faceIndex = 2;
+                if (settings.rotationAngle < 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+                if (rotIndex == 1 || rotIndex == 2)
+                    shiftDown = !shiftDown;
+            }
+
+            if (faceIndex == 2) faceIndex--;
+            if (faceIndex == 0) faceIndex += 2;
+
+            cube->rotate_face(faceIndex, !shiftDown, dir);
             cube->numberOfMoves++;
         }
 
@@ -386,12 +453,36 @@ void Window::processInput(int key, int scancode, int action, int mods)
                 shiftDown = !shiftDown;
 
             if (settings.cubeSize == 2 && faceIndex != 0) faceIndex = 1;
+            if (settings.cubeSize == 4 && faceIndex != 0) faceIndex = 3;
 
             cube->rotate_face(faceIndex, shiftDown, dir);
             cube->numberOfMoves++;
         }
 
-        if (key == GLFW_KEY_E)
+        if (key == GLFW_KEY_I && settings.cubeSize == 4)
+        {
+            lastMove = "Inner Up";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+
+            dir = line;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+                faceIndex = 2;
+            else
+                shiftDown = !shiftDown;
+
+            if (settings.cubeSize == 4)
+            {
+                if (faceIndex == 0) faceIndex = 1;
+                else faceIndex = 2;
+            }
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+            cube->numberOfMoves++;
+        }
+
+        if (key == GLFW_KEY_E && settings.cubeSize == 3)
         {
             if (settings.cubeSize != 2)
             {
@@ -426,6 +517,30 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+            if (settings.cubeSize == 4 && faceIndex != 0) faceIndex = 3;
+
+            cube->rotate_face(faceIndex, !shiftDown, dir);
+            cube->numberOfMoves++;
+        }
+
+        if (key == GLFW_KEY_S && settings.cubeSize == 4)
+        {
+            lastMove = "Inner Down";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+
+            dir = line;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 != 0)
+            {
+                faceIndex = 2;
+                shiftDown = !shiftDown;
+            }
+
+            if (settings.cubeSize == 4)
+            {
+                if (faceIndex != 2) faceIndex = 1;
+            }
 
             cube->rotate_face(faceIndex, !shiftDown, dir);
             cube->numberOfMoves++;
@@ -462,6 +577,38 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+            if (settings.cubeSize == 4 && faceIndex == 2) faceIndex = 3;
+
+            cube->rotate_face(faceIndex, shiftDown, dir);
+            cube->numberOfMoves++;
+        }
+
+        if (key == GLFW_KEY_V && settings.cubeSize == 4)
+        {
+            lastMove = "Inner Back";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 2 || rotIndex == 3)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+            }
+            else
+            {
+                if (rotIndex == 0 || rotIndex == 3)
+                    faceIndex = 2;
+                if (rotIndex == 0 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+
+            if (faceIndex == 0) faceIndex = 1;
 
             cube->rotate_face(faceIndex, shiftDown, dir);
             cube->numberOfMoves++;
@@ -493,6 +640,38 @@ void Window::processInput(int key, int scancode, int action, int mods)
             }
 
             if (settings.cubeSize == 2 && faceIndex == 2) faceIndex = 1;
+            if (settings.cubeSize == 4 && faceIndex == 2) faceIndex = 3;
+
+            cube->rotate_face(faceIndex, !shiftDown, dir);
+            cube->numberOfMoves++;
+        }
+
+        if (key == GLFW_KEY_C && settings.cubeSize == 4)
+        {
+            lastMove = "Inner Front";
+            if (shiftDown)
+                lastMove = "Inverse " + lastMove;
+
+            if ((int)round(settings.flipAngle) / 180 % 2 == 0)
+            {
+                if (rotIndex == 1 || rotIndex == 0)
+                    faceIndex = 2;
+                if (rotIndex == 2 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    faceIndex == 0 ? faceIndex = 2 : faceIndex = 0;
+            }
+            else
+            {
+                if (rotIndex == 1 || rotIndex == 2)
+                    faceIndex = 2;
+                if (rotIndex == 0 || rotIndex == 1)
+                    shiftDown = !shiftDown;
+                if (settings.rotationAngle < 0)
+                    shiftDown = !shiftDown;
+            }
+
+            if (faceIndex == 0) faceIndex = 1;
 
             cube->rotate_face(faceIndex, !shiftDown, dir);
             cube->numberOfMoves++;
