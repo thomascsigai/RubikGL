@@ -72,7 +72,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-For questions or suggestions, please open an issue or contact the repository owner.
+For questions or suggestions, don't hesitate to contact me.
 
 ### Social Media
 
