@@ -13,7 +13,7 @@ bool Window::init()
 {
     if (!init_GLFW())
         return false;
-
+    
     if (!init_GLEW())
         return false;
 

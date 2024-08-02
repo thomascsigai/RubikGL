@@ -51,6 +51,16 @@ set_target_properties(glew32 PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/GL"
 )
 
+# Check if GLFW library exists
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/glfw3.lib")
+    message(FATAL_ERROR "GLFW library not found. Make sure glfw3.lib is in the 'lib' directory.")
+endif()
+
+# Check if GLEW library exists
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/glew32.lib")
+    message(FATAL_ERROR "GLEW library not found. Make sure glew32.lib is in the 'lib' directory.")
+endif()
+
 find_package(OpenGL REQUIRED)
 
 # Add source to this project's executable.
