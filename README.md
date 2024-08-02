@@ -15,7 +15,7 @@ Made to learn more about computer graphics programming using C++ and OpenGL.
 
 ## Demo
 
-[![Regarder la vidéo sur YouTube](https://img.youtube.com/vi/0ZmnrCsjMKA/0.jpg)](https://www.youtube.com/watch?v=0ZmnrCsjMKA&ab_channel=ThomasCsigai)
+A demo of RubikGL can be found on YouTube: [Demo Video](https://www.youtube.com/watch?v=0ZmnrCsjMKA&ab_channel=ThomasCsigai)
 
 ## Prerequisites
 
