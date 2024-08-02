@@ -32,7 +32,7 @@ A demo of RubikGL can be found on YouTube. [Demo Video](#) *(Link to be added la
     ```bash
     mkdir build
     cd build
-    cmake -G "Visual Studio 16 2019" ..
+    cmake ..
     ```
 
 3. **Open the generated solution file:**
@@ -41,11 +41,18 @@ A demo of RubikGL can be found on YouTube. [Demo Video](#) *(Link to be added la
 
 4. **Build the project:**
     - Set the build configuration to `Release` or `Debug`.
-    - Build the solution (Ctrl+Shift+B).
+    - Build project `ALL_BUILD` (In Solution explorer Right-click on `ALL_BUILD` / Build).
 
-## Usage
+## Usage (In Visual Studio)
 
-Run the executable generated in the `build` directory to start the simulator. To run the app, set RubikGL as the startup project in Visual Studio (Right-click on RubikGL / Set as startup project) and run the project. Use the interface to customize the cube, rotate faces, scramble the cube, and adjust the camera. Controls are shown in the controls window, and the cube can be changed in the cube settings window. You may have to move the windows a bit to see all options clearly.
+1. **Set RubikGL as startup project:**
+   - In Solution explorer Right-click on `RubikGL` / Set as startup project
+  
+2. **Run the app:**
+   - Run the `RubikGL` project (`F5`)
+   - Use the interface to customize the cube, rotate faces, scramble the cube, and adjust the camera.
+
+Controls are shown in the controls window, and the cube can be changed in the cube settings window. You may have to move the windows a bit to see all options clearly.
 
 ## Documentation
 
