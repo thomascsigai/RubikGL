@@ -1,32 +1,24 @@
-﻿# CMakeList.txt : CMake project for RubikGL, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.8)
 
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
+project(RubikGL)
 
-project ("RubikGL")
-
-# Ajouter le répertoire contenant les fichiers en-tête
+# Add include directories
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include/GLFW 
-    ${CMAKE_SOURCE_DIR}/include/GL 
-    ${CMAKE_SOURCE_DIR}/include/glm 
-    ${CMAKE_SOURCE_DIR}/include/imgui 
+    ${CMAKE_SOURCE_DIR}/include/GLFW
+    ${CMAKE_SOURCE_DIR}/include/GL
+    ${CMAKE_SOURCE_DIR}/include/glm
+    ${CMAKE_SOURCE_DIR}/include/imgui
     ${CMAKE_SOURCE_DIR}/include/imgui/backends
-    ${CMAKE_SOURCE_DIR}/include/ 
-    ${CMAKE_SOURCE_DIR}/include/shader 
+    ${CMAKE_SOURCE_DIR}/include/
+    ${CMAKE_SOURCE_DIR}/include/shader
     ${CMAKE_SOURCE_DIR}/include/stb_image
 )
 
-# Copier les shaders dans le répertoire de build
-file(COPY ${CMAKE_SOURCE_DIR}/resources/shaders ${CMAKE_SOURCE_DIR}/resources/textures DESTINATION ${CMAKE_BINARY_DIR}/resources)
+# Copy shaders and textures to the build directory
+file(COPY ${CMAKE_SOURCE_DIR}/resources/shaders DESTINATION ${CMAKE_BINARY_DIR}/resources)
+file(COPY ${CMAKE_SOURCE_DIR}/resources/textures DESTINATION ${CMAKE_BINARY_DIR}/resources)
 
-# Ajouter les fichiers source d'ImGui
+# Add ImGui source files
 set(IMGUI_SRC
     ${CMAKE_SOURCE_DIR}/lib/imgui/imgui.cpp
     ${CMAKE_SOURCE_DIR}/lib/imgui/imgui_demo.cpp
@@ -37,17 +29,17 @@ set(IMGUI_SRC
     ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
 )
 
-# Add GLFW Lib
+# Add GLFW library
 add_library(glfw3 STATIC IMPORTED)
 set_target_properties(glfw3 PROPERTIES
     IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glfw3.lib"
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/GLFW"
 )
 
-# Add GLEW Lib
-add_library(glew32 STATIC IMPORTED)
-set_target_properties(glew32 PROPERTIES
-    IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glew32.lib"
+# Add GLEW static library
+add_library(glew32s STATIC IMPORTED)
+set_target_properties(glew32s PROPERTIES
+    IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glew32s.lib"
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/GL"
 )
 
@@ -56,18 +48,27 @@ if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/glfw3.lib")
     message(FATAL_ERROR "GLFW library not found. Make sure glfw3.lib is in the 'lib' directory.")
 endif()
 
-# Check if GLEW library exists
-if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/glew32.lib")
-    message(FATAL_ERROR "GLEW library not found. Make sure glew32.lib is in the 'lib' directory.")
+# Check if GLEW static library exists
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/glew32s.lib")
+    message(FATAL_ERROR "GLEW static library not found. Make sure glew32s.lib is in the 'lib' directory.")
 endif()
 
 find_package(OpenGL REQUIRED)
 
-# Add source to this project's executable.
-add_executable (RubikGL "src/Main.cpp" ${IMGUI_SRC} "src/Window.cpp" "src/Cube.cpp" "src/Piece.cpp" "src/stb_image.cpp" "src/GradientBackground.cpp")
+# Add source files to the executable
+add_executable(RubikGL
+    "src/Main.cpp"
+    ${IMGUI_SRC}
+    "src/Window.cpp"
+    "src/Cube.cpp"
+    "src/Piece.cpp"
+    "src/stb_image.cpp"
+    "src/GradientBackground.cpp"
+)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)
+if(CMAKE_VERSION VERSION_GREATER 3.12)
+    set_property(TARGET RubikGL PROPERTY CXX_STANDARD 20)
 endif()
 
-target_link_libraries(RubikGL PRIVATE glfw3 glew32 ${OPENGL_LIBRARIES})
+target_compile_definitions(RubikGL PRIVATE GLEW_STATIC)
+target_link_libraries(RubikGL PRIVATE glfw3 glew32s ${OPENGL_LIBRARIES})

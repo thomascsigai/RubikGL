@@ -140,7 +140,6 @@ void Window::draw_ui_frames(Cube*& _cube)
 void Window::draw_main_frame(Cube*& _cube)
 {
     ImGuiWindowFlags window_flags = 0;
-    window_flags |= ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoCollapse;
 
@@ -191,7 +190,6 @@ void Window::draw_main_frame(Cube*& _cube)
 void Window::draw_controls_frame()
 {
     ImGuiWindowFlags window_flags = 0;
-    window_flags |= ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoCollapse;
 
@@ -418,7 +416,6 @@ void Window::draw_controls_frame()
 void Window::draw_cube_infos_frame(Cube*& _cube)
 {
     ImGuiWindowFlags window_flags = 0;
-    window_flags |= ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoCollapse;
 
