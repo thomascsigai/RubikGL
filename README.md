@@ -66,7 +66,7 @@ Controls are shown in the controls window, and the cube can be changed in the cu
 | `stb_image.cpp`        | Third-party library for loading images.                   |
 | `Window.cpp`           | Manages the window creation and input handling.           |
 
-### Project Progress
+## Project Progress
 
 Follow the project progress [here](https://malleable-painter-716.notion.site/RubikGL-a7539a97290f488c991f5ec4f79caf14).
 
